@@ -86,7 +86,7 @@ const buttonVariants = cva(
  */
 interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof buttonVariants> {
+    VariantProps<typeof buttonVariants> {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   isLoading?: boolean;
@@ -153,11 +153,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         <span>{children}</span>
 
         {/* Right icon */}
-        {rightIcon && (
-          <span className="ml-2">
-            {rightIcon}
-          </span>
-        )}
+        {rightIcon && <span className="ml-2">{rightIcon}</span>}
       </button>
     );
   }

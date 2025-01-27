@@ -1,8 +1,6 @@
 import Hero from "@/components/Home/Hero";
 
 export default function Home() {
-
-
   const homeHeroProps = {
     title: "Professional IT Solutions for",
     description:
@@ -39,7 +37,6 @@ export default function Home() {
       },
     ],
   };
-
 
   return (
     <section>

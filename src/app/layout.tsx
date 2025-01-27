@@ -26,7 +26,7 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class">
           <Navbar />
-          <main className="py-20">{children}</main>
+          <main>{children}</main>
         </ThemeProvider>
       </body>
     </html>

@@ -87,12 +87,12 @@ export default function DesktopMenu({ menu }: DesktopMenuProps) {
     >
       {!hasSubMenu && menu.href ? (
         <Link href={menu.href}>
-          <span className="flex items-center text-xs xl:text-base gap-1 hover:bg-white/5 cursor-pointer px-3 py-1 rounded-xl">
+          <span className="flex items-center font-medium text-xs xl:text-base gap-1 hover:bg-white/5 cursor-pointer px-3 py-1 rounded-xl">
             {menu.name}
           </span>
         </Link>
       ) : (
-        <span className="flex items-center text-xs xl:text-base gap-1 hover:bg-white/5 cursor-pointer px-3 py-1 rounded-xl">
+        <span className="flex items-center font-medium text-xs xl:text-base gap-1 hover:bg-white/5 cursor-pointer px-3 py-1 rounded-xl">
           {menu.name}
           {hasSubMenu && (
             <ChevronDown
@@ -113,8 +113,8 @@ export default function DesktopMenu({ menu }: DesktopMenuProps) {
           aria-label={`${menu.name} submenu`}
         >
           {menu.layout === "grouped" &&
-          groupedSubMenus &&
-          menu.subMenuHeading ? (
+            groupedSubMenus &&
+            menu.subMenuHeading ? (
             <>
               <div className="grid grid-cols-2 gap-8">
                 {menu.subMenuHeading.map((heading, idx) => (

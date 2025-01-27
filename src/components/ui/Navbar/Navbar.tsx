@@ -10,6 +10,8 @@ import Image from "next/image";
 import { throttle } from "lodash";
 import { cn } from "@/lib/utils";
 import DarkModeToggle from "../DarkModeToggle";
+import { IoSearch } from "react-icons/io5";
+import { Button } from "../Button";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,8 +31,7 @@ export default function Navbar() {
     <motion.header
       className={cn(
         "nav-container",
-        isScrolled && "nav-scrolled",
-        "bg-background border-b border-border"
+        isScrolled ? "nav-scrolled" : "bg-transparent", "py-1"
       )}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -42,8 +43,18 @@ export default function Navbar() {
 
           <DesktopNavigation />
 
-          <MobMenu Menus={NAVIGATION_MENUS} />
-          <DarkModeToggle />
+          <div className="flex items-center gap-2">
+            <MobMenu Menus={NAVIGATION_MENUS} />
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:flex w-10 h-10  items-center justify-center rounded-full bg-background ">
+                <IoSearch className="size-4 sm:size-5" />
+              </div>
+              <DarkModeToggle />
+              <Link href="/signup" passHref>
+                <Button variant="primary" size="lg" className="rounded-full">Sign Up</Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </motion.header>

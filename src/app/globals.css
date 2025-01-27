@@ -43,10 +43,12 @@
       ======================================= */
 :root {
   /* BRAND & KEY COLORS */
-  --primary: 145, 100%, 28%; /* #00913e (brand green) in HSL */
+  --primary: 145, 100%, 28%;
+  /* #00913e (brand green) in HSL */
   --primary-foreground: 0, 0%, 100%;
 
-  --secondary: 210, 7%, 24%; /* #2a2e31 (brand dark) in HSL */
+  --secondary: 210, 7%, 24%;
+  /* #2a2e31 (brand dark) in HSL */
   --secondary-foreground: 0, 0%, 100%;
 
   /* Can be used as a gradient, if desired */
@@ -65,13 +67,15 @@
   --sub-title: 210, 9%, 40%;
 
   /* ACCENTS & STATE COLORS */
-  --tertiary: 44, 90%, 57%; /* Gold-like accent */
+  --tertiary: 44, 90%, 57%;
+  /* Gold-like accent */
   --tertiary-foreground: 0, 0%, 15%;
 
   --muted: 210, 16%, 85%;
   --muted-foreground: 210, 16%, 30%;
 
-  --accent: 200, 85%, 50%; /* Vibrant blue accent */
+  --accent: 200, 85%, 50%;
+  /* Vibrant blue accent */
   --accent-foreground: 0, 0%, 100%;
 
   /* Alerts */
@@ -138,6 +142,7 @@
       BASE STYLES (OPTIONAL)
       ======================================= */
 @layer base {
+
   /* Ensure the body uses our variable-based colors and fonts */
   body {
     font-family: var(--font-family);
@@ -145,23 +150,20 @@
     color: hsl(var(--foreground));
     margin: 0;
   }
-
-  /* Optional transition for theme switching */
-  .dark,
-  :root {
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
 }
 
 @layer components {
+
   /* Navbar */
   .nav-container {
-    @apply fixed w-full top-0 z-50 bg-background shadow-sm transition-all duration-200;
+    @apply fixed w-full top-0 z-50 bg-background;
   }
 
   .nav-scrolled {
-    @apply shadow-lg shadow-foreground/5;
+    @apply flex w-full items-center justify-center shadow-sm bg-opacity-80 backdrop-blur-sm;
+    @apply bg-white bg-opacity-80 dark:bg-secondary dark:bg-opacity-80;
   }
+
   .nav-link {
     @apply relative text-foreground/80 hover:text-foreground transition-colors duration-200;
   }
@@ -179,12 +181,7 @@
   }
 
   .sub-menu {
-    @apply absolute top-[4.2rem] p-[15px] rounded-xl origin-[50%_-170px] z-50
-      border border-border/10
-      bg-background/95
-      backdrop-blur-xl
-      shadow-lg shadow-foreground/10
-      dark:shadow-foreground/30;
+    @apply absolute top-[4.2rem] p-[15px] rounded-xl origin-[50%_-170px] z-50 border border-border/10 bg-background/95 backdrop-blur-xl shadow-lg shadow-foreground/10 dark:shadow-foreground/30;
   }
 
   .sub-menu a:hover {
@@ -192,9 +189,7 @@
   }
 
   .sub-menu-item {
-    @apply flex items-center gap-4 p-3 rounded-lg 
-      hover:bg-foreground/5 
-      transition-colors duration-200;
+    @apply flex items-center gap-4 p-3 rounded-lg hover:bg-foreground/5 transition-colors duration-200;
   }
 
   .sub-menu-icon {
@@ -202,11 +197,8 @@
   }
 
   .sub-menu-heading {
-    @apply relative text-sm font-medium tracking-wide uppercase 
-      before:absolute before:left-0 before:-bottom-2 
-      before:w-8 before:h-[2px] before:bg-primary/60 
-      after:absolute after:left-0 after:-bottom-2 
-      after:w-16 after:h-[0.5px] after:bg-primary/30 
-      text-foreground/80;
+    @apply relative text-sm font-medium tracking-wide uppercase before:absolute before:left-0 before:-bottom-2 before:w-8 before:h-[2px] before:bg-primary/60 after:absolute after:left-0 after:-bottom-2 after:w-16 after:h-[0.5px] after:bg-primary/30 text-foreground/80;
   }
 }
+
+

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { IHeroSlide } from "@/components/Home/Hero/HeroSlides";
 import HeroSlideModal from "@/components/admin/HeroSlideModal";
 import { toast } from "react-hot-toast";
+import Loader from "@/components/ui/Loader";
 
 // Extended type for slide with MongoDB ID
 type HeroSlideWithId = IHeroSlide & { _id: string };
@@ -109,8 +110,9 @@ export default function HeroManagement() {
       // Optimistic update
       setSlides(prevSlides => prevSlides.filter(slide => slide._id !== id));
       toast.success("Slide deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete slide");
+    } catch (error: unknown) {
+      console.error("Delete error:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to delete slide");
       // Refetch slides in case of error to ensure UI consistency
       fetchSlides();
     }
@@ -119,8 +121,9 @@ export default function HeroManagement() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading...</div>
+        <Loader />
       </div>
+
     );
   }
 
@@ -136,8 +139,8 @@ export default function HeroManagement() {
             setEditingSlide(null);
             setIsModalOpen(true);
           }}
+          leftIcon={<Plus className="w-4 h-4" />}
         >
-          <Plus className="w-4 h-4" />
           Add New Slide
         </Button>
       </div>

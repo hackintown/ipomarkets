@@ -24,9 +24,10 @@ const slideSchema = z.object({
  */
 export async function GET(
   request: Request,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await Promise.resolve(context.params);
+  const { id } = await Promise.resolve(params);
+
 
   try {
     // Validate ObjectId format
@@ -69,9 +70,10 @@ export async function GET(
  */
 export async function PUT(
   request: Request,
-  context: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await Promise.resolve(context.params);
+  const { id } = await Promise.resolve(params);
+
 
   try {
     // Validate ObjectId format
@@ -154,9 +156,11 @@ export async function PUT(
  */
 export async function DELETE(
   request: Request,
-    context: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
+
 ) {
-  const { id } = await Promise.resolve(context.params);
+  const { id } = await Promise.resolve(params);
+
 
   try {
     // Validate ObjectId format

@@ -164,7 +164,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
 
         {/* Left icon (only if not loading) */}
-        {leftIcon && !isLoading && <span className="mr-2">{leftIcon}</span>}
+        {leftIcon && !isLoading && <span className="">{leftIcon}</span>}
 
         {/* Main text */}
         <span>{children as React.ReactNode}</span>

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
-import { IHeroSlide } from "@/components/Home/Hero/HeroSlides";
 import { z } from "zod";
 
 /**

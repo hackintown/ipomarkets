@@ -51,9 +51,10 @@ export default function HeroSlideModal({
       await onSubmit(formData);
       toast.success("Slide updated successfully");
     } catch (error) {
-      toast.error("Failed to update slide");
+      toast.error(error instanceof Error ? error.message : "Failed to update slide");
     }
   };
+
 
 
   if (!isOpen) return null;

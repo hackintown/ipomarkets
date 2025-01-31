@@ -1,5 +1,5 @@
 import Sidebar from "@/components/admin/Sidebar";
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
   
 /**
  * AdminLayout Component

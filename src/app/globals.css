@@ -219,3 +219,17 @@
     @apply content-[''] absolute left-0 -bottom-2 w-16 h-[0.5px] bg-primary/30;
   }
 }
+
+@layer components {
+  .spinner-bar::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 37px;
+    width: 6px;
+    height: 18px;
+    border-radius: 20%;
+    background: (var(--foreground));
+  }
+}

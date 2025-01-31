@@ -1,12 +1,15 @@
 // src/components/Hero/HeroSlides.ts
 
 export interface IHeroSlide {
+    _id?: string;
     title: string;
     tagline: string;
     description: string;
     imageUrl: string;
     ctaLabel: string;
     ctaLink: string;
+    createdAt?: Date;
+    updatedAt?: Date;
   }
   
   export const heroSlides: IHeroSlide[] = [

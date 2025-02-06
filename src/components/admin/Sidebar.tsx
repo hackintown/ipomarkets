@@ -3,7 +3,18 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LucideIcon, LayoutDashboard, Presentation, Calendar, Settings, Users, FileText, ChevronFirst, ChevronLast } from "lucide-react";
+import {
+    LucideIcon,
+    LayoutDashboard,
+    HomeIcon,
+    TableProperties,
+    DatabaseIcon,
+    Building2,
+    Paintbrush,
+    Settings,
+    ChevronFirst,
+    ChevronLast
+} from "lucide-react";
 import { useState } from "react";
 
 interface SidebarItem {
@@ -22,30 +33,35 @@ const sidebarItems: SidebarItem[] = [
     {
         title: "Home",
         href: "/admin/home",
-        icon: Presentation,
+        icon: HomeIcon,
         submenu: [
             { title: "Hero Section", href: "/admin/home/hero" },
             { title: "Features", href: "/admin/home/features" },
         ],
     },
     {
-        title: "Current IPOs",
-        href: "/admin/current-ipos",
-        icon: FileText,
+        title: "Create Table",
+        href: "/admin/dashboard/create-table",
+        icon: TableProperties,
     },
     {
-        title: "Upcoming IPOs",
-        href: "/admin/upcoming-ipos",
-        icon: Calendar,
+        title: "Add Table Data",
+        href: "/admin/dashboard/add-table-data",
+        icon: DatabaseIcon,
     },
     {
-        title: "Users",
-        href: "/admin/users",
-        icon: Users,
+        title: "Add Company Datails",
+        href: "/admin/dashboard/add-company-details",
+        icon: Building2,
+    },
+    {
+        title: "Customize Datails",
+        href: "/admin/dashboard/customize-details",
+        icon: Paintbrush,
     },
     {
         title: "Settings",
-        href: "/admin/settings",
+        href: "/admin/dashboard/settings",
         icon: Settings,
     },
 ];

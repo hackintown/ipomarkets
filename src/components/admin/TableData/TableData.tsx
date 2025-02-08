@@ -75,8 +75,13 @@ export default function TableData() {
   const createValidationSchema = (table: Table | null) => {
     if (!table) return z.object({});
 
-    const columnValidations = table.columns.reduce<Record<string, z.ZodTypeAny>>((acc, column) => {
-      if (column.type === 'select' && (!column.options || column.options.length === 0)) {
+    const columnValidations = table.columns.reduce<
+      Record<string, z.ZodTypeAny>
+    >((acc, column) => {
+      if (
+        column.type === "select" &&
+        (!column.options || column.options.length === 0)
+      ) {
         throw new Error(`Select field "${column.name}" must have options`);
       }
 
@@ -129,8 +134,14 @@ export default function TableData() {
 
         case "richtext":
           validation = column.required
-            ? z.string().min(1, "This field is required").or(z.literal("<p></p>").transform(() => ""))
-            : z.string().optional().or(z.literal("<p></p>").transform(() => ""));
+            ? z
+                .string()
+                .min(1, "This field is required")
+                .or(z.literal("<p></p>").transform(() => ""))
+            : z
+                .string()
+                .optional()
+                .or(z.literal("<p></p>").transform(() => ""));
           break;
 
         case "textarea":
@@ -193,7 +204,9 @@ export default function TableData() {
       toast.success("Data added successfully");
       reset();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to add table data");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to add table data"
+      );
       console.error("Error adding table data:", error);
     } finally {
       setIsLoading(false);
@@ -278,7 +291,7 @@ export default function TableData() {
 // Update renderFormField types
 function renderFormField(
   column: Column,
-  register: ReturnType<typeof useForm>['register']
+  register: ReturnType<typeof useForm>["register"]
 ) {
   const fieldProps = register(column.name);
 
@@ -287,7 +300,6 @@ function renderFormField(
       return (
         <RichTextEditor
           {...fieldProps}
-          value={fieldProps.value || ""}
           onChange={(value: string) => {
             fieldProps.onChange({ target: { value: value || "" } });
           }}
@@ -299,7 +311,6 @@ function renderFormField(
       return (
         <Select
           onValueChange={(value) => fieldProps.onChange({ target: { value } })}
-          value={fieldProps.value || ""}
         >
           <SelectTrigger>
             <SelectValue placeholder={`Select ${column.name}`} />
@@ -384,4 +395,4 @@ function renderFormField(
         />
       );
   }
-}   
+}

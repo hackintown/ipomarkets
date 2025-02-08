@@ -1,10 +1,9 @@
-import CreateTable from "@/components/admin/CreateTable/CreateTable";
+import CreateTable from "@/components/Admin/CreateTable/CreateTable";
 
 export default function CreateTablePage() {
-    return (
-        <div> 
-            <CreateTable />
-        </div>
-
-    );  
-}       
+  return (
+    <div>
+      <CreateTable />
+    </div>
+  );
+}

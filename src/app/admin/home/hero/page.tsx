@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { IHeroSlide } from "@/components/Home/Hero/HeroSlides";
-import HeroSlideModal from "@/components/admin/HeroSlideModal";
+import HeroSlideModal from "@/components/Admin/HeroSlideModal";
 import { toast } from "react-hot-toast";
 import Loader from "@/components/ui/Loader";
 
@@ -16,7 +16,9 @@ export default function HeroManagement() {
   // State management with proper typing
   const [slides, setSlides] = useState<HeroSlideWithId[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingSlide, setEditingSlide] = useState<HeroSlideWithId | null>(null);
+  const [editingSlide, setEditingSlide] = useState<HeroSlideWithId | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   // Memoized fetch function to prevent unnecessary recreations
@@ -57,7 +59,9 @@ export default function HeroManagement() {
       toast.success("Slide created successfully");
       setIsModalOpen(false);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to create slide");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create slide"
+      );
     }
   };
 
@@ -79,8 +83,8 @@ export default function HeroManagement() {
       if (!response.ok) throw new Error(data.error || "Failed to update slide");
 
       // Optimistic update
-      setSlides(prevSlides =>
-        prevSlides.map(slide =>
+      setSlides((prevSlides) =>
+        prevSlides.map((slide) =>
           slide._id === editingSlide._id
             ? { ...data, _id: editingSlide._id }
             : slide
@@ -92,7 +96,9 @@ export default function HeroManagement() {
       setEditingSlide(null);
     } catch (error) {
       console.error("Update error:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to update slide");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update slide"
+      );
     }
   };
 
@@ -108,11 +114,13 @@ export default function HeroManagement() {
       if (!response.ok) throw new Error("Failed to delete slide");
 
       // Optimistic update
-      setSlides(prevSlides => prevSlides.filter(slide => slide._id !== id));
+      setSlides((prevSlides) => prevSlides.filter((slide) => slide._id !== id));
       toast.success("Slide deleted successfully");
     } catch (error: unknown) {
       console.error("Delete error:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to delete slide");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete slide"
+      );
       // Refetch slides in case of error to ensure UI consistency
       fetchSlides();
     }
@@ -123,7 +131,6 @@ export default function HeroManagement() {
       <div className="flex items-center justify-center min-h-screen">
         <Loader />
       </div>
-
     );
   }
 
@@ -210,4 +217,4 @@ export default function HeroManagement() {
       />
     </div>
   );
-} 
+}

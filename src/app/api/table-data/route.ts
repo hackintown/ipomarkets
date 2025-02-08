@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
-import { z } from "zod";
 import { ObjectId } from "mongodb";
 
 // POST - Create new table data entry
@@ -14,14 +13,13 @@ export async function POST(request: Request) {
     const result = await db.collection("table-data").insertOne({
       ...data,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
-    return NextResponse.json({ 
-      success: true, 
-      id: result.insertedId 
+    return NextResponse.json({
+      success: true,
+      id: result.insertedId,
     });
-
   } catch (error) {
     console.error("Error creating table data:", error);
     return NextResponse.json(
@@ -35,7 +33,7 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const tableId = searchParams.get('tableId');
+    const tableId = searchParams.get("tableId");
 
     if (!tableId) {
       return NextResponse.json(
@@ -47,13 +45,13 @@ export async function GET(request: Request) {
     const client = await clientPromise;
     const db = client.db("create-table");
 
-    const data = await db.collection("table-data")
+    const data = await db
+      .collection("table-data")
       .find({ tableId: new ObjectId(tableId) })
       .sort({ createdAt: -1 })
       .toArray();
 
     return NextResponse.json(data);
-
   } catch (error) {
     console.error("Error fetching table data:", error);
     return NextResponse.json(
@@ -61,4 +59,4 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-} 
+}

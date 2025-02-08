@@ -1,6 +1,6 @@
-import Sidebar from "@/components/admin/Sidebar";
-import { Toaster } from 'react-hot-toast';
-  
+import Sidebar from "@/components/Admin/Sidebar";
+import { Toaster } from "react-hot-toast";
+
 /**
  * AdminLayout Component
  * Provides the layout structure for all admin pages with toast notifications
@@ -17,17 +17,11 @@ export default function AdminLayout({
         <Sidebar />
 
         {/* Main Content Area */}
-        <main className="flex-1 p-4 overflow-y-auto">
-          {children}
-        </main>
+        <main className="flex-1 p-4 overflow-y-auto">{children}</main>
 
         {/* Toast Notifications */}
-        <Toaster
-          position="top-center"
-          reverseOrder={false}
-        />
+        <Toaster position="top-center" reverseOrder={false} />
       </div>
     </>
-
   );
-} 
+}

@@ -17,7 +17,7 @@ export default function AdminLayout({
         <Sidebar />
 
         {/* Main Content Area */}
-        <main className="flex-1 p-4 overflow-y-auto">{children}</main>
+        <main className="p-4">{children}</main>
 
         {/* Toast Notifications */}
         <Toaster position="top-center" reverseOrder={false} />

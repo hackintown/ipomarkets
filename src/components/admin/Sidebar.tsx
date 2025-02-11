@@ -13,7 +13,8 @@ import {
     Paintbrush,
     Settings,
     ChevronFirst,
-    ChevronLast
+    ChevronLast,
+    Eye
 } from "lucide-react";
 import { useState } from "react";
 
@@ -48,6 +49,11 @@ const sidebarItems: SidebarItem[] = [
         title: "Add Table Data",
         href: "/admin/dashboard/add-table-data",
         icon: DatabaseIcon,
+    },
+    {
+        title: "Preview Tables",
+        href: "/admin/dashboard/preview-tables",
+        icon: Eye,
     },
     {
         title: "Add Company Datails",

@@ -6,22 +6,22 @@ export const NAVIGATION_MENUS = [
     href: "/",
   },
   {
-    name: "Current IPOs",
-    subMenuHeading: ["Mainboard IPOs", "Upcoming IPOs"],
+    name: "IPOs",
+    subMenuHeading: ["Current IPOs", "Upcoming IPOs", "SME IPOs"],
     subMenu: [
       {
         name: "Active IPOs",
         desc: "Currently open for subscription",
         href: "/active-ipos",
         iconName: "Activity",
-        group: "Mainboard IPOs",
+        group: "Current IPOs",
       },
       {
         name: "Recently Listed",
         desc: "IPOs listed in last 30 days",
         href: "/recently-listed",
         iconName: "LineChart",
-        group: "Mainboard IPOs",
+        group: "Current IPOs",
       },
       {
         name: "Upcoming IPOs",
@@ -35,16 +35,13 @@ export const NAVIGATION_MENUS = [
         desc: "Schedule of upcoming listings",
         href: "/ipo-calendar",
         iconName: "CalendarDays",
-        group: "Upcoming IPOs",
+        group: "SME IPOs",
       },
     ],
     gridCols: 2,
     layout: "grouped",
   },
-  {
-    name: "SME IPOs",
-    href: "/sme-ipos",
-  },
+
   {
     name: "News",
     href: "/news",

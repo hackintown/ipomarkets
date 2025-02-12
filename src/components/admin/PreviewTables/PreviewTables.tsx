@@ -239,15 +239,15 @@ export default function PreviewTables() {
       {/* Header Section */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Preview Tables</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-bold text-foreground">Preview Tables</h1>
+          <p className="text-sm lg:text-base text-muted-foreground">
             View and manage your dynamic table data
           </p>
         </div>
 
         {/* Table Selection */}
         <Select value={selectedTable?._id || "default"} onValueChange={handleTableSelect}>
-          <SelectTrigger className="w-full md:w-[200px]">
+          <SelectTrigger className="w-full md:w-[200px] bg-input border border-border"> 
             <SelectValue placeholder="Select a table" />
           </SelectTrigger>
           <SelectContent>

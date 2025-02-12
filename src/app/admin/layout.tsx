@@ -12,7 +12,7 @@ export default function AdminLayout({
 }) {
   return (
     <>
-      <div className="flex h-screen bg-gray-100 dark:bg-gray-900 mt-20">
+      <div className="flex h-screen bg-background mt-20">
         {/* Sidebar Navigation */}
         <Sidebar />
 

@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Plus, Trash2, Save, Eye, Edit, Settings2, Database, Table as TableIcon, Info } from "lucide-react";
+import { Plus, Trash2, Save, Eye, Edit, Settings2, Database, Table as TableIcon, Info, RefreshCw } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Tooltip } from "@/components/ui/Tooltip/Tooltip";
 
@@ -270,10 +270,10 @@ export default function CreateTable() {
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div className="w-full sm:w-auto">
-          <h1 className="text-xl sm:text-2xl font-bold">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">
             {editingTable ? "Edit Table" : "Create New Table"}
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm lg:text-base text-muted-foreground">
             Define your table structure with custom fields
           </p>
         </div>
@@ -281,8 +281,7 @@ export default function CreateTable() {
           <Button
             variant="outline"
             onClick={() => setPreviewMode(!previewMode)}
-            className="flex-1 sm:flex-none"
-            leftIcon={<Eye className="w-4 h-4" />}
+            leftIcon={<Eye className="w-4 h-4 mx-1" />}
           >
             {previewMode ? "Edit Mode" : "Preview"}
           </Button>
@@ -354,7 +353,7 @@ export default function CreateTable() {
               {/* Column List */}
               <div className="space-y-3 sm:space-y-4">
                 {controlledFields.map((field, index) => (
-                  <div key={field.id} className="relative p-3 sm:p-4 border rounded-lg bg-gray-50 dark:bg-gray-800">
+                  <div key={field.id} className="relative p-3 sm:p-4 border rounded-lg bg-background">
                     {/* Column Header */}
                     <div className="flex justify-between items-start mb-4">
                       <h4 className="font-medium">Column {index + 1}</h4>
@@ -363,8 +362,8 @@ export default function CreateTable() {
                         variant="ghost"
                         size="sm"
                         onClick={() => remove(index)}
-                        className="text-red-500 hover:text-red-700"
-                        leftIcon={<Trash2 className="w-4 h-4" />}
+                        className="text-destructive"
+                        leftIcon={<Trash2 className="w-4 h-4 mx-1" />}
                       >
                         Remove
                       </Button>
@@ -474,14 +473,14 @@ export default function CreateTable() {
                 variant="outline"
                 onClick={() => reset()}
                 className="w-full sm:w-auto"
+                leftIcon={<RefreshCw className="w-4 h-4 mx-1" />}
               >
                 Reset
               </Button>
               <Button
                 type="submit"
                 variant="primary"
-                leftIcon={<Save className="w-4 h-4" />}
-                className="w-full sm:w-auto"
+                leftIcon={<Save className="w-4 h-4 mx-1" />}
               >
                 {editingTable ? "Update Table" : "Create Table"}
               </Button>

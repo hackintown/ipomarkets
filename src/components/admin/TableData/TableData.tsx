@@ -17,6 +17,7 @@ import { Card } from "@/components/ui/Card";
 import { Save } from "lucide-react";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
+import Loader from "@/components/ui/Loader";
 
 // Dynamic import of the rich text editor to avoid SSR issues
 const RichTextEditor = dynamic(() => import("@/components/ui/RichTextEditor"), {
@@ -233,27 +234,27 @@ export default function TableData() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <Loader />
       </div>
-    );
+    )
   }
 
   return (
-    <div className="space-y-8 p-4 md:p-6 bg-background/50">
+    <div className="space-y-4 p-4 md:p-6 bg-background/50">
       {/* Enhanced Header */}
       <div className="flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Add Table Data
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm lg:text-base text-muted-foreground">
             Create and manage your table records efficiently
           </p>
         </div>
       </div>
 
       {/* Enhanced Table Selection Card */}
-      <Card className="p-4 md:p-6 bg-card border border-border/50 shadow-sm">
+      <Card className="p-4 md:p-6 bg-card shadow-sm">
         <div className="space-y-4">
           <label className="text-sm font-medium text-card-foreground">
             Select Table
@@ -262,10 +263,10 @@ export default function TableData() {
             onValueChange={handleTableSelect}
             value={selectedTable?._id || "default"}
           >
-            <SelectTrigger className="w-full bg-input border-border/50 focus:ring-2 focus:ring-ring focus:ring-offset-2">
+            <SelectTrigger className="w-full bg-input border border-border">
               <SelectValue placeholder="Select a table" />
             </SelectTrigger>
-            <SelectContent className="bg-popover border-border/50">
+            <SelectContent className="bg-popover">
               <SelectItem value="default" disabled className="text-muted-foreground">
                 Select a table
               </SelectItem>
@@ -291,7 +292,7 @@ export default function TableData() {
 
       {/* Enhanced Dynamic Form */}
       {selectedTable && (
-        <Card className="p-4 md:p-6 bg-card border border-border/50 shadow-sm">
+        <Card className="p-4 md:p-6 bg-card shadow-sm">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {selectedTable.columns.map((column, index) => (
@@ -315,7 +316,7 @@ export default function TableData() {
               ))}
             </div>
 
-            <div className="flex justify-end pt-6 border-t border-border/50">
+            <div className="flex justify-end pt-6 border-t border-border">
               <Button
                 type="submit"
                 disabled={isLoading}
@@ -336,7 +337,7 @@ function renderFormField(
   column: Column,
   register: ReturnType<typeof useForm>["register"]
 ) {
-  const baseInputStyles = "w-full rounded-md border border-border/50 bg-input text-card-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none transition-colors";
+  const baseInputStyles = "w-full rounded-md border border-border bg-input text-card-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-ring focus:ring-offset-2 focus:outline-none transition-colors";
   const fieldProps = register(column.name);
 
   switch (column.type) {

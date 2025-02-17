@@ -14,10 +14,11 @@ import {
 } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Save } from "lucide-react";
+import { Save, Upload } from "lucide-react";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 import Loader from "@/components/ui/Loader";
+import * as XLSX from 'xlsx';
 
 // Dynamic import of the rich text editor to avoid SSR issues
 const RichTextEditor = dynamic(() => import("@/components/ui/RichTextEditor"), {
@@ -231,6 +232,72 @@ export default function TableData() {
     }
   };
 
+  const handleExcelImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const file = event.target.files?.[0];
+      if (!file || !selectedTable) return;
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const data = e.target?.result;
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const excelData = XLSX.utils.sheet_to_json(worksheet);
+
+        // Map Excel columns to table columns
+        const mappedData = excelData.map((row: any) => {
+          const mappedRow: Record<string, any> = {};
+          selectedTable.columns.forEach(column => {
+            // Try to find matching column in Excel (case insensitive)
+            const excelColumn = Object.keys(row).find(
+              key => key.toLowerCase() === column.name.toLowerCase()
+            );
+            if (excelColumn) {
+              mappedRow[column.name] = row[excelColumn];
+            }
+          });
+          return mappedRow;
+        });
+
+        // Validate and save data
+        const validData = mappedData.filter(row =>
+          Object.keys(row).length === selectedTable.columns.length
+        );
+
+        if (validData.length === 0) {
+          toast.error("No valid data found. Please check column names match.");
+          return;
+        }
+
+        // Save data in batches
+        const batchSize = 100;
+        for (let i = 0; i < validData.length; i += batchSize) {
+          const batch = validData.slice(i, i + batchSize);
+          await Promise.all(
+            batch.map(row =>
+              fetch('/api/table-data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  tableId: selectedTable._id,
+                  data: row
+                })
+              })
+            )
+          );
+        }
+
+        toast.success(`Successfully imported ${validData.length} records`);
+      };
+
+      reader.readAsArrayBuffer(file);
+    } catch (error) {
+      console.error('Error importing Excel:', error);
+      toast.error('Failed to import Excel file');
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -317,13 +384,33 @@ export default function TableData() {
             </div>
 
             <div className="flex justify-end pt-6 border-t border-border">
-              <Button
-                type="submit"
-                disabled={isLoading}
-                leftIcon={<Save className={cn("w-4 h-4 mr-2", isLoading && "animate-spin")} />}
-              >
-                Add Record
-              </Button>
+              <div className="flex gap-4">
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  leftIcon={<Save className={cn("w-4 h-4 mr-2", isLoading && "animate-spin")} />}
+                >
+                  Add Record
+                </Button>
+
+                <div className="relative">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById('excel-upload')?.click()}
+                    leftIcon={<Upload className={cn("w-4 h-4 mr-2", isLoading && "animate-spin")} />}
+                  >
+                    Import Excel
+                  </Button>
+                  <input
+                    id="excel-upload"
+                    type="file"
+                    accept=".xlsx,.xls"
+                    className="hidden"
+                    onChange={handleExcelImport}
+                  />
+                </div>
+              </div>
             </div>
           </form>
         </Card>

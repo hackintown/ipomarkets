@@ -9,6 +9,11 @@ import { Card } from "@/components/ui/Card";
 import { Plus, Trash2, Save, Eye, Edit, Settings2, Database, Table as TableIcon, Info, RefreshCw } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Tooltip } from "@/components/ui/Tooltip/Tooltip";
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { GripVertical } from 'lucide-react';
+import { cn } from "@/lib/utils";
 
 // Validation schema for the form
 const tableSchema = z.object({
@@ -52,6 +57,98 @@ interface ApiResponse {
   count: number;
 }
 
+// Add this interface for sortable table items
+interface SortableTableItemProps {
+  id: string;
+  table: Table;
+  onEdit: (table: Table) => void;
+  onDelete: (id: string) => void;
+}
+
+// Add this component for sortable table items
+function SortableTableItem({ id, table, onEdit, onDelete }: SortableTableItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 1 : 0,
+  };
+
+  return (
+    <Card
+      ref={setNodeRef}
+      style={style}
+      className={cn(
+        "p-3 sm:p-4",
+        isDragging && "shadow-lg opacity-75"
+      )}
+    >
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex-1">
+          <h3 className="font-semibold">{table.tableName}</h3>
+          <p className="text-sm text-muted-foreground">
+            {table.description}
+          </p>
+        </div>
+        <div className="flex gap-2 items-center">
+          <button
+            {...attributes}
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+          >
+            <GripVertical className="w-6 h-6 text-muted-foreground" />
+          </button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onEdit(table)}
+          >
+            <Edit className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => onDelete(table._id)}
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <p className="text-sm">
+          <span className="font-medium">Columns:</span>{" "}
+          {table.columns.length}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {table.settings.sortable && (
+            <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+              Sortable
+            </span>
+          )}
+          {table.settings.filterable && (
+            <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+              Filterable
+            </span>
+          )}
+          {table.settings.searchable && (
+            <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+              Searchable
+            </span>
+          )}
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 /**
  * CreateTable Component
  * Provides an interface for creating and managing dynamic data tables
@@ -66,6 +163,7 @@ export default function CreateTable() {
   const [tables, setTables] = useState<Table[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingTable, setEditingTable] = useState<Table | null>(null);
+  const [tableOrder, setTableOrder] = useState<string[]>([]);
 
   const { register, control, handleSubmit, watch, reset, setValue, formState: { errors } } = useForm<TableFormData>({
     resolver: zodResolver(tableSchema),
@@ -95,10 +193,23 @@ export default function CreateTable() {
     ...watchFieldArray[index],
   }));
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   // Add useEffect for initial table fetch
   useEffect(() => {
     fetchTables();
   }, []);
+
+  useEffect(() => {
+    if (tables.length > 0) {
+      setTableOrder(tables.map(table => table._id));
+    }
+  }, [tables]);
 
   // Fetch existing tables
   const fetchTables = async () => {
@@ -262,6 +373,90 @@ export default function CreateTable() {
           </div>
         </div>
       </Card>
+    );
+  };
+
+  const handleDragEnd = async (event: any) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const oldIndex = tableOrder.indexOf(active.id);
+      const newIndex = tableOrder.indexOf(over.id);
+
+      const newOrder = arrayMove(tableOrder, oldIndex, newIndex);
+      setTableOrder(newOrder);
+
+      try {
+        // Save the new order to the backend
+        const response = await fetch('/api/tables/reorder', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order: newOrder }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update table order');
+        }
+
+        toast.success('Table order updated successfully');
+      } catch (error) {
+        console.error('Error updating table order:', error);
+        toast.error('Failed to update table order');
+        // Revert the order if save fails
+        setTableOrder(tableOrder);
+      }
+    }
+  };
+
+  // Replace the existing tables grid with this
+  const renderTables = () => {
+    if (isLoading) {
+      return (
+        <div className="flex items-center justify-center min-h-[200px]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        </div>
+      );
+    }
+
+    if (!Array.isArray(tables) || tables.length === 0) {
+      return (
+        <Card className="p-6 sm:p-8 text-center">
+          <Database className="h-12 w-12 mx-auto text-muted-foreground" />
+          <h3 className="mt-4 text-lg font-semibold">No Tables Found</h3>
+          <p className="text-muted-foreground">
+            Create your first table using the form above
+          </p>
+        </Card>
+      );
+    }
+
+    return (
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={tableOrder}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {tableOrder.map((id) => {
+              const table = tables.find(t => t._id === id);
+              if (!table) return null;
+              return (
+                <SortableTableItem
+                  key={id}
+                  id={id}
+                  table={table}
+                  onEdit={handleEditTable}
+                  onDelete={handleDeleteTable}
+                />
+              );
+            })}
+          </div>
+        </SortableContext>
+      </DndContext>
     );
   };
 
@@ -496,73 +691,7 @@ export default function CreateTable() {
           Existing Tables
         </h2>
 
-        {isLoading ? (
-          <div className="flex items-center justify-center min-h-[200px]">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-          </div>
-        ) : Array.isArray(tables) && tables.length > 0 ? (
-          <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {tables.map((table) => (
-              <Card key={table._id} className="p-3 sm:p-4">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="font-semibold">{table.tableName}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {table.description}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEditTable(table)}
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => handleDeleteTable(table._id)}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm">
-                    <span className="font-medium">Columns:</span>{" "}
-                    {table.columns.length}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {table.settings.sortable && (
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
-                        Sortable
-                      </span>
-                    )}
-                    {table.settings.filterable && (
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
-                        Filterable
-                      </span>
-                    )}
-                    {table.settings.searchable && (
-                      <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
-                        Searchable
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <Card className="p-6 sm:p-8 text-center">
-            <Database className="h-12 w-12 mx-auto text-muted-foreground" />
-            <h3 className="mt-4 text-lg font-semibold">No Tables Found</h3>
-            <p className="text-muted-foreground">
-              Create your first table using the form above
-            </p>
-          </Card>
-        )}
+        {renderTables()}
       </div>
     </div>
   );

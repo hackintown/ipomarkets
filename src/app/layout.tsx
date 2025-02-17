@@ -26,7 +26,7 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class">
           <Navbar />
-          <main>{children}</main>
+          <main className="mt-[4.5rem]">{children}</main>
         </ThemeProvider>
       </body>
     </html>

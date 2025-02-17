@@ -31,7 +31,7 @@ export default function Navbar() {
     <motion.header
       className={cn(
         "nav-container",
-        isScrolled ? "nav-scrolled" : "bg-transparent",
+        isScrolled ? "nav-scrolled" : "bg-background",
         "py-1"
       )}
       initial={{ y: -100 }}

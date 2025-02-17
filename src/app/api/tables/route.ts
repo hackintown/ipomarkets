@@ -44,10 +44,10 @@ export async function GET() {
     const client = await clientPromise;
     const db = client.db("create-table");
 
-    // Fetch tables with sorting by creation date
+    // Fetch tables with sorting by order field
     const tables = await db.collection("tables")
       .find({})
-      .sort({ createdAt: -1 })
+      .sort({ order: 1 })
       .toArray();
 
     return NextResponse.json({

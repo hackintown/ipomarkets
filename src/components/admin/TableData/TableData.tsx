@@ -18,7 +18,7 @@ import { Save, Upload } from "lucide-react";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 import Loader from "@/components/ui/Loader";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 // Dynamic import of the rich text editor to avoid SSR issues
 const RichTextEditor = dynamic(() => import("@/components/ui/RichTextEditor"), {
@@ -57,6 +57,10 @@ interface ApiResponse {
 
 // Add type for form data
 type FormData = Record<string, string | number | boolean>;
+
+interface ExcelRow {
+  [key: string]: string | number | boolean | null;
+}
 
 export default function TableData() {
   const [tables, setTables] = useState<Table[]>([]);
@@ -145,8 +149,8 @@ export default function TableData() {
           if (column.options) {
             validation = column.required
               ? z.enum(column.options as [string, ...string[]], {
-                required_error: "Please select an option",
-              })
+                  required_error: "Please select an option",
+                })
               : z.enum(column.options as [string, ...string[]]).optional();
           }
           break;
@@ -154,13 +158,13 @@ export default function TableData() {
         case "richtext":
           validation = column.required
             ? z
-              .string()
-              .min(1, "This field is required")
-              .or(z.literal("<p></p>").transform(() => ""))
+                .string()
+                .min(1, "This field is required")
+                .or(z.literal("<p></p>").transform(() => ""))
             : z
-              .string()
-              .optional()
-              .or(z.literal("<p></p>").transform(() => ""));
+                .string()
+                .optional()
+                .or(z.literal("<p></p>").transform(() => ""));
           break;
 
         case "textarea":
@@ -232,7 +236,9 @@ export default function TableData() {
     }
   };
 
-  const handleExcelImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleExcelImport = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     try {
       const file = event.target.files?.[0];
       if (!file || !selectedTable) return;
@@ -240,18 +246,18 @@ export default function TableData() {
       const reader = new FileReader();
       reader.onload = async (e) => {
         const data = e.target?.result;
-        const workbook = XLSX.read(data, { type: 'array' });
+        const workbook = XLSX.read(data, { type: "array" });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const excelData = XLSX.utils.sheet_to_json(worksheet);
 
         // Map Excel columns to table columns
-        const mappedData = excelData.map((row: any) => {
-          const mappedRow: Record<string, any> = {};
-          selectedTable.columns.forEach(column => {
+        const mappedData = (excelData as ExcelRow[]).map((row) => {
+          const mappedRow: Record<string, unknown> = {};
+          selectedTable.columns.forEach((column) => {
             // Try to find matching column in Excel (case insensitive)
             const excelColumn = Object.keys(row).find(
-              key => key.toLowerCase() === column.name.toLowerCase()
+              (key) => key.toLowerCase() === column.name.toLowerCase()
             );
             if (excelColumn) {
               mappedRow[column.name] = row[excelColumn];
@@ -261,8 +267,8 @@ export default function TableData() {
         });
 
         // Validate and save data
-        const validData = mappedData.filter(row =>
-          Object.keys(row).length === selectedTable.columns.length
+        const validData = mappedData.filter(
+          (row) => Object.keys(row).length === selectedTable.columns.length
         );
 
         if (validData.length === 0) {
@@ -275,14 +281,14 @@ export default function TableData() {
         for (let i = 0; i < validData.length; i += batchSize) {
           const batch = validData.slice(i, i + batchSize);
           await Promise.all(
-            batch.map(row =>
-              fetch('/api/table-data', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            batch.map((row) =>
+              fetch("/api/table-data", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   tableId: selectedTable._id,
-                  data: row
-                })
+                  data: row,
+                }),
               })
             )
           );
@@ -293,8 +299,8 @@ export default function TableData() {
 
       reader.readAsArrayBuffer(file);
     } catch (error) {
-      console.error('Error importing Excel:', error);
-      toast.error('Failed to import Excel file');
+      console.error("Error importing Excel:", error);
+      toast.error("Failed to import Excel file");
     }
   };
 
@@ -303,7 +309,7 @@ export default function TableData() {
       <div className="flex items-center justify-center min-h-[400px]">
         <Loader />
       </div>
-    )
+    );
   }
 
   return (
@@ -334,7 +340,11 @@ export default function TableData() {
               <SelectValue placeholder="Select a table" />
             </SelectTrigger>
             <SelectContent className="bg-popover">
-              <SelectItem value="default" disabled className="text-muted-foreground">
+              <SelectItem
+                value="default"
+                disabled
+                className="text-muted-foreground"
+              >
                 Select a table
               </SelectItem>
               {Array.isArray(tables) && tables.length > 0 ? (
@@ -348,7 +358,11 @@ export default function TableData() {
                   </SelectItem>
                 ))
               ) : (
-                <SelectItem value="no-tables" disabled className="text-muted-foreground">
+                <SelectItem
+                  value="no-tables"
+                  disabled
+                  className="text-muted-foreground"
+                >
                   No tables available
                 </SelectItem>
               )}
@@ -388,7 +402,14 @@ export default function TableData() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  leftIcon={<Save className={cn("w-4 h-4 mr-2", isLoading && "animate-spin")} />}
+                  leftIcon={
+                    <Save
+                      className={cn(
+                        "w-4 h-4 mr-2",
+                        isLoading && "animate-spin"
+                      )}
+                    />
+                  }
                 >
                   Add Record
                 </Button>
@@ -397,8 +418,17 @@ export default function TableData() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => document.getElementById('excel-upload')?.click()}
-                    leftIcon={<Upload className={cn("w-4 h-4 mr-2", isLoading && "animate-spin")} />}
+                    onClick={() =>
+                      document.getElementById("excel-upload")?.click()
+                    }
+                    leftIcon={
+                      <Upload
+                        className={cn(
+                          "w-4 h-4 mr-2",
+                          isLoading && "animate-spin"
+                        )}
+                      />
+                    }
                   >
                     Import Excel
                   </Button>
@@ -424,7 +454,8 @@ function renderFormField(
   column: Column,
   register: ReturnType<typeof useForm>["register"]
 ) {
-  const baseInputStyles = "w-full rounded-md border border-border bg-input text-card-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-ring focus:ring-offset-2 focus:outline-none transition-colors";
+  const baseInputStyles =
+    "w-full rounded-md border border-border bg-input text-card-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-ring focus:ring-offset-2 focus:outline-none transition-colors";
   const fieldProps = register(column.name);
 
   switch (column.type) {

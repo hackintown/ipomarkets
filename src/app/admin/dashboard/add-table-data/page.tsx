@@ -1,4 +1,4 @@
-import TableData from "@/components/Admin/TableData/TableData";
+import TableData from "@/components/admin/TableData/TableData";
 
 export default function AddTableDataPage() {
   return (

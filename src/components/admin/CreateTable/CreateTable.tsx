@@ -6,33 +6,75 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Plus, Trash2, Save, Eye, Edit, Settings2, Database, Table as TableIcon, Info, RefreshCw } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Save,
+  Eye,
+  Edit,
+  Settings2,
+  Database,
+  Table as TableIcon,
+  Info,
+  RefreshCw,
+} from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Tooltip } from "@/components/ui/Tooltip/Tooltip";
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { GripVertical } from 'lucide-react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { DragEndEvent } from "@dnd-kit/core";
 
 // Validation schema for the form
 const tableSchema = z.object({
   tableName: z.string().min(3, "Table name must be at least 3 characters"),
   description: z.string().min(10, "Description must be at least 10 characters"),
-  columns: z.array(z.object({
-    name: z.string().min(2, "Column name must be at least 2 characters"),
-    type: z.enum(["text", "number", "date", "select", "boolean", "email", "url", "phone", "textarea", "richtext"]),
-    required: z.boolean(),
-    unique: z.boolean().optional(),
-    defaultValue: z.string().optional(),
-    placeholder: z.string().optional(),
-    options: z.union([z.string(), z.array(z.string())]).optional(),
-    validation: z.object({
-      min: z.number().optional(),
-      max: z.number().optional(),
-      pattern: z.string().optional(),
-    }).optional(),
-  })).min(1, "At least one column is required"),
+  columns: z
+    .array(
+      z.object({
+        name: z.string().min(2, "Column name must be at least 2 characters"),
+        type: z.enum([
+          "text",
+          "number",
+          "date",
+          "select",
+          "boolean",
+          "email",
+          "url",
+          "phone",
+          "textarea",
+          "richtext",
+        ]),
+        required: z.boolean(),
+        unique: z.boolean().optional(),
+        defaultValue: z.string().optional(),
+        placeholder: z.string().optional(),
+        options: z.union([z.string(), z.array(z.string())]).optional(),
+        validation: z
+          .object({
+            min: z.number().optional(),
+            max: z.number().optional(),
+            pattern: z.string().optional(),
+          })
+          .optional(),
+      })
+    )
+    .min(1, "At least one column is required"),
   settings: z.object({
     sortable: z.boolean(),
     filterable: z.boolean(),
@@ -66,7 +108,12 @@ interface SortableTableItemProps {
 }
 
 // Add this component for sortable table items
-function SortableTableItem({ id, table, onEdit, onDelete }: SortableTableItemProps) {
+function SortableTableItem({
+  id,
+  table,
+  onEdit,
+  onDelete,
+}: SortableTableItemProps) {
   const {
     attributes,
     listeners,
@@ -86,17 +133,12 @@ function SortableTableItem({ id, table, onEdit, onDelete }: SortableTableItemPro
     <Card
       ref={setNodeRef}
       style={style}
-      className={cn(
-        "p-3 sm:p-4",
-        isDragging && "shadow-lg opacity-75"
-      )}
+      className={cn("p-3 sm:p-4", isDragging && "shadow-lg opacity-75")}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
           <h3 className="font-semibold">{table.tableName}</h3>
-          <p className="text-sm text-muted-foreground">
-            {table.description}
-          </p>
+          <p className="text-sm text-muted-foreground">{table.description}</p>
         </div>
         <div className="flex gap-2 items-center">
           <button
@@ -106,11 +148,7 @@ function SortableTableItem({ id, table, onEdit, onDelete }: SortableTableItemPro
           >
             <GripVertical className="w-6 h-6 text-muted-foreground" />
           </button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onEdit(table)}
-          >
+          <Button variant="outline" size="sm" onClick={() => onEdit(table)}>
             <Edit className="w-4 h-4" />
           </Button>
           <Button
@@ -124,8 +162,7 @@ function SortableTableItem({ id, table, onEdit, onDelete }: SortableTableItemPro
       </div>
       <div className="space-y-2">
         <p className="text-sm">
-          <span className="font-medium">Columns:</span>{" "}
-          {table.columns.length}
+          <span className="font-medium">Columns:</span> {table.columns.length}
         </p>
         <div className="flex flex-wrap gap-2">
           {table.settings.sortable && (
@@ -165,7 +202,15 @@ export default function CreateTable() {
   const [editingTable, setEditingTable] = useState<Table | null>(null);
   const [tableOrder, setTableOrder] = useState<string[]>([]);
 
-  const { register, control, handleSubmit, watch, reset, setValue, formState: { errors } } = useForm<TableFormData>({
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<TableFormData>({
     resolver: zodResolver(tableSchema),
     defaultValues: {
       tableName: "",
@@ -207,7 +252,7 @@ export default function CreateTable() {
 
   useEffect(() => {
     if (tables.length > 0) {
-      setTableOrder(tables.map(table => table._id));
+      setTableOrder(tables.map((table) => table._id));
     }
   }, [tables]);
 
@@ -241,17 +286,20 @@ export default function CreateTable() {
     try {
       const transformedData = {
         ...data,
-        columns: data.columns.map(column => {
+        columns: data.columns.map((column) => {
           if (column.type === "select" && column.options) {
             return {
               ...column,
-              options: typeof column.options === "string"
-                ? (column.options as string).split(",").map((opt: string) => opt.trim())
-                : column.options
+              options:
+                typeof column.options === "string"
+                  ? (column.options as string)
+                      .split(",")
+                      .map((opt: string) => opt.trim())
+                  : column.options,
             };
           }
           return column;
-        })
+        }),
       };
 
       const url = editingTable
@@ -272,11 +320,17 @@ export default function CreateTable() {
       }
 
       await fetchTables();
-      toast.success(editingTable ? "Table updated successfully" : "Table created successfully");
+      toast.success(
+        editingTable
+          ? "Table updated successfully"
+          : "Table created successfully"
+      );
       reset();
       setEditingTable(null);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to save table");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save table"
+      );
       console.error("Error saving table:", error);
     }
   };
@@ -320,7 +374,7 @@ export default function CreateTable() {
     { value: "url", label: "URL" },
     { value: "phone", label: "Phone" },
     { value: "textarea", label: "Text Area" },
-    { value: "richtext", label: "Rich Text" }
+    { value: "richtext", label: "Rich Text" },
   ];
 
   // Add this preview component
@@ -340,7 +394,9 @@ export default function CreateTable() {
                   {data.columns.map((column, index) => (
                     <th key={index} className="p-2 text-left border">
                       {column.name}
-                      {column.required && <span className="text-destructive">*</span>}
+                      {column.required && (
+                        <span className="text-destructive">*</span>
+                      )}
                       <div className="text-xs text-muted-foreground">
                         {column.type}
                       </div>
@@ -366,7 +422,10 @@ export default function CreateTable() {
             {Object.entries(data.settings)
               .filter(([, value]) => value === true)
               .map(([key]) => (
-                <span key={key} className="bg-primary/10 text-primary px-2 py-1 rounded">
+                <span
+                  key={key}
+                  className="bg-primary/10 text-primary px-2 py-1 rounded"
+                >
                   {key}
                 </span>
               ))}
@@ -376,32 +435,31 @@ export default function CreateTable() {
     );
   };
 
-  const handleDragEnd = async (event: any) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (active.id !== over.id) {
-      const oldIndex = tableOrder.indexOf(active.id);
-      const newIndex = tableOrder.indexOf(over.id);
+    if (active.id !== over?.id) {
+      const oldIndex = tableOrder.indexOf(active.id as string);
+      const newIndex = tableOrder.indexOf(over?.id as string);
 
       const newOrder = arrayMove(tableOrder, oldIndex, newIndex);
       setTableOrder(newOrder);
 
       try {
-        // Save the new order to the backend
-        const response = await fetch('/api/tables/reorder', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("/api/tables/reorder", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ order: newOrder }),
         });
 
         if (!response.ok) {
-          throw new Error('Failed to update table order');
+          throw new Error("Failed to update table order");
         }
 
-        toast.success('Table order updated successfully');
+        toast.success("Table order updated successfully");
       } catch (error) {
-        console.error('Error updating table order:', error);
-        toast.error('Failed to update table order');
+        console.error("Error updating table order:", error);
+        toast.error("Failed to update table order");
         // Revert the order if save fails
         setTableOrder(tableOrder);
       }
@@ -442,7 +500,7 @@ export default function CreateTable() {
         >
           <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {tableOrder.map((id) => {
-              const table = tables.find(t => t._id === id);
+              const table = tables.find((t) => t._id === id);
               if (!table) return null;
               return (
                 <SortableTableItem
@@ -487,7 +545,10 @@ export default function CreateTable() {
         <TablePreview data={watch()} />
       ) : (
         <Card className="p-3 sm:p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-4 sm:space-y-6"
+          >
             {/* Basic Info Section */}
             <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
               <div className="space-y-2">
@@ -503,18 +564,24 @@ export default function CreateTable() {
                   placeholder="e.g., customers, orders, products"
                 />
                 {errors.tableName && (
-                  <p className="text-sm text-red-500">{errors.tableName.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.tableName.message}
+                  </p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
+                <label className="block text-sm font-medium mb-1">
+                  Description
+                </label>
                 <input
                   {...register("description")}
                   className="w-full p-2 border rounded-md"
                   placeholder="Enter table description"
                 />
                 {errors.description && (
-                  <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.description.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -528,15 +595,17 @@ export default function CreateTable() {
                 </h3>
                 <Button
                   type="button"
-                  onClick={() => append({
-                    name: "",
-                    type: "text",
-                    required: true,
-                    unique: false,
-                    defaultValue: "",
-                    placeholder: "",
-                    validation: {}
-                  })}
+                  onClick={() =>
+                    append({
+                      name: "",
+                      type: "text",
+                      required: true,
+                      unique: false,
+                      defaultValue: "",
+                      placeholder: "",
+                      validation: {},
+                    })
+                  }
                   variant="outline"
                   className="w-full sm:w-auto"
                   leftIcon={<Plus className="w-4 h-4" />}
@@ -548,7 +617,10 @@ export default function CreateTable() {
               {/* Column List */}
               <div className="space-y-3 sm:space-y-4">
                 {controlledFields.map((field, index) => (
-                  <div key={field.id} className="relative p-3 sm:p-4 border rounded-lg bg-background">
+                  <div
+                    key={field.id}
+                    className="relative p-3 sm:p-4 border rounded-lg bg-background"
+                  >
                     {/* Column Header */}
                     <div className="flex justify-between items-start mb-4">
                       <h4 className="font-medium">Column {index + 1}</h4>

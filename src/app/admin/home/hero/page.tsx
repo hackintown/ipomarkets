@@ -5,9 +5,9 @@ import { useState, useEffect, useCallback } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { IHeroSlide } from "@/components/Home/Hero/HeroSlides";
-import HeroSlideModal from "@/components/Admin/HeroSlideModal";
 import { toast } from "react-hot-toast";
 import Loader from "@/components/ui/Loader";
+import HeroSlideModal from "@/components/admin/HeroSlideModal";
 
 // Extended type for slide with MongoDB ID
 type HeroSlideWithId = IHeroSlide & { _id: string };

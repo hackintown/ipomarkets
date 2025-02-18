@@ -1,7 +1,9 @@
-import PreviewTables from "@/components/Admin/PreviewTables/PreviewTables";
+import PreviewTables from "@/components/admin/PreviewTables/PreviewTables";
 
 export default function PreviewTablesPage() {
-    return (
-        <PreviewTables />
-    )
+  return (
+    <>
+      <PreviewTables />
+    </>
+  );
 }

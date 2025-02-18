@@ -1,4 +1,4 @@
-import Sidebar from "@/components/Admin/Sidebar";
+import Sidebar from "@/components/admin/Sidebar";
 import { Toaster } from "react-hot-toast";
 
 /**

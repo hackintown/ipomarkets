@@ -51,11 +51,11 @@ export default function HeroSlideModal({
       await onSubmit(formData);
       toast.success("Slide updated successfully");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to update slide");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update slide"
+      );
     }
   };
-
-
 
   if (!isOpen) return null;
 
@@ -74,10 +74,7 @@ export default function HeroSlideModal({
           </button>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">Title</label>
             <input
@@ -105,7 +102,9 @@ export default function HeroSlideModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Description</label>
+            <label className="block text-sm font-medium mb-1">
+              Description
+            </label>
             <textarea
               value={formData.description}
               onChange={(e) =>
@@ -146,9 +145,7 @@ export default function HeroSlideModal({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">
-                CTA Link
-              </label>
+              <label className="block text-sm font-medium mb-1">CTA Link</label>
               <input
                 type="text"
                 value={formData.ctaLink}
@@ -173,4 +170,4 @@ export default function HeroSlideModal({
       </div>
     </div>
   );
-} 
+}

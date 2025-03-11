@@ -12,10 +12,19 @@ type SlideData = z.infer<typeof slideSchema>;
  */
 const slideSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
-  tagline: z.string().min(1, "Tagline is required").max(200, "Tagline is too long"),
-  description: z.string().min(1, "Description is required").max(500, "Description is too long"),
+  tagline: z
+    .string()
+    .min(1, "Tagline is required")
+    .max(200, "Tagline is too long"),
+  description: z
+    .string()
+    .min(1, "Description is required")
+    .max(500, "Description is too long"),
   imageUrl: z.string().url("Invalid image URL"),
-  ctaLabel: z.string().min(1, "CTA Label is required").max(50, "CTA Label is too long"),
+  ctaLabel: z
+    .string()
+    .min(1, "CTA Label is required")
+    .max(50, "CTA Label is too long"),
   ctaLink: z.string().min(1, "CTA Link is required").url("Invalid CTA URL"),
 });
 
@@ -28,30 +37,24 @@ export async function GET(
 ) {
   const { id } = await Promise.resolve(params);
 
-
   try {
     // Validate ObjectId format
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
-
         { error: "Invalid slide ID format" },
         { status: 400 }
       );
     }
 
     const client = await clientPromise;
-    const db = client.db("ipo-market");
-    
+    const db = client.db("ipomarketdb");
+
     const slide = await db.collection("hero-slides").findOne({
-      _id: new ObjectId(id)
+      _id: new ObjectId(id),
     });
 
-
     if (!slide) {
-      return NextResponse.json(
-        { error: "Slide not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Slide not found" }, { status: 404 });
     }
 
     return NextResponse.json(slide);
@@ -70,10 +73,9 @@ export async function GET(
  */
 export async function PUT(
   request: Request,
-    { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await Promise.resolve(params);
-
 
   try {
     // Validate ObjectId format
@@ -85,10 +87,9 @@ export async function PUT(
       );
     }
 
-
     const client = await clientPromise;
-    const db = client.db("ipo-market");
-    
+    const db = client.db("ipomarketdb");
+
     // Parse and validate request body
     const data = await request.json();
     const validatedData: SlideData = slideSchema.parse(data);
@@ -102,9 +103,10 @@ export async function PUT(
           updatedAt: new Date(),
         },
       },
-      { 
-        returnDocument: 'after',
-        projection: { // Specify fields to return
+      {
+        returnDocument: "after",
+        projection: {
+          // Specify fields to return
           _id: 1,
           title: 1,
           tagline: 1,
@@ -112,31 +114,28 @@ export async function PUT(
           imageUrl: 1,
           ctaLabel: 1,
           ctaLink: 1,
-          updatedAt: 1
-        }
+          updatedAt: 1,
+        },
       }
     );
 
     if (!result) {
-      return NextResponse.json(
-        { error: "Slide not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Slide not found" }, { status: 404 });
     }
 
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error updating slide:", error);
-    
+
     // Handle validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { 
-          error: "Validation failed", 
-          details: error.errors.map(err => ({
-            field: err.path.join('.'),
-            message: err.message
-          }))
+        {
+          error: "Validation failed",
+          details: error.errors.map((err) => ({
+            field: err.path.join("."),
+            message: err.message,
+          })),
         },
         { status: 400 }
       );
@@ -156,11 +155,9 @@ export async function PUT(
  */
 export async function DELETE(
   request: Request,
-    { params }: { params: Promise<{ id: string }> }
-
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await Promise.resolve(params);
-
 
   try {
     // Validate ObjectId format
@@ -172,25 +169,20 @@ export async function DELETE(
       );
     }
 
-
     const client = await clientPromise;
-    const db = client.db("ipo-market");
+    const db = client.db("ipomarketdb");
 
     const result = await db.collection("hero-slides").deleteOne({
-      _id: new ObjectId(id)
+      _id: new ObjectId(id),
     });
 
-
     if (result.deletedCount === 0) {
-      return NextResponse.json(
-        { error: "Slide not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Slide not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
-      message: "Slide deleted successfully"
+      message: "Slide deleted successfully",
     });
   } catch (error) {
     console.error("Error deleting slide:", error);
@@ -199,4 +191,4 @@ export async function DELETE(
       { status: 500 }
     );
   }
-} 
+}

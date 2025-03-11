@@ -39,8 +39,6 @@ import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { DragEndEvent } from "@dnd-kit/core";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
-
 
 // Validation schema for the form
 const tableSchema = z.object({
@@ -203,7 +201,6 @@ export default function CreateTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [editingTable, setEditingTable] = useState<Table | null>(null);
   const [tableOrder, setTableOrder] = useState<string[]>([]);
-  const [tableType, setTableType] = useState<"mainboard" | "sme">("mainboard");
 
   const {
     register,

@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { useEffect, useState, useCallback } from "react"
-import Slider from "react-slick"
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
-import { cn } from "@/lib/utils"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/Button"
-import { IoArrowForwardOutline } from "react-icons/io5"
+import { useEffect, useState, useCallback } from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/Button";
+import { IoArrowForwardOutline } from "react-icons/io5";
 
 interface IHeroSlide {
   _id: string;
@@ -22,13 +22,12 @@ interface IHeroSlide {
   updatedAt: string;
 }
 
-
 export default function HeroSection() {
-  const [slides, setSlides] = useState<IHeroSlide[]>([])
-  const [activeSlide, setActiveSlide] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
-  const [mainSlider, setMainSlider] = useState<Slider | null>(null)
-  const [thumbnailSlider, setThumbnailSlider] = useState<Slider | null>(null)
+  const [slides, setSlides] = useState<IHeroSlide[]>([]);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [mainSlider, setMainSlider] = useState<Slider | null>(null);
+  const [thumbnailSlider, setThumbnailSlider] = useState<Slider | null>(null);
 
   // Fetch slides data
   const fetchSlides = useCallback(async () => {
@@ -79,7 +78,7 @@ export default function HeroSection() {
     beforeChange: (_: number, next: number) => setActiveSlide(next),
     // Sync with thumbnail slider
     asNavFor: thumbnailSlider || undefined,
-  }
+  };
 
   // Updated thumbnail slider settings
   const thumbnailSliderSettings = {
@@ -109,7 +108,7 @@ export default function HeroSection() {
         },
       },
     ],
-  }
+  };
 
   return (
     <section className="relative w-full min-h-[60vh] sm:min-h-[70vh] lg:min-h-[80vh] bg-background overflow-hidden">
@@ -121,7 +120,10 @@ export default function HeroSection() {
           className="h-full"
         >
           {slides.map((slide) => (
-            <div key={slide._id} className="relative h-[60vh] sm:h-[70vh] lg:h-[80vh]">
+            <div
+              key={slide._id}
+              className="relative h-[60vh] sm:h-[70vh] lg:h-[80vh]"
+            >
               {/* Background Image */}
               <div className="absolute inset-0">
                 <Image
@@ -155,12 +157,15 @@ export default function HeroSection() {
 
                   {/* CTA Button */}
                   <Button
-                    variant={'primary'}
+                    variant={"primary"}
                     size="lg"
                     className="w-fit"
                     rightIcon={<IoArrowForwardOutline />}
                   >
-                    <Link href={slide.ctaLink} className="flex items-center gap-2">
+                    <Link
+                      href={slide.ctaLink}
+                      className="flex items-center gap-2"
+                    >
                       {slide.ctaLabel}
                     </Link>
                   </Button>
@@ -171,8 +176,10 @@ export default function HeroSection() {
         </Slider>
 
         {/* Thumbnail Slider Container */}
-        <div className="hidden sm:block absolute -bottom-4 md:-bottom-8 right-0 w-full max-w-64 md:max-w-96 lg:max-w-lg xl:max-w-2xl z-10 shadow-sm backdrop-blur-sm rounded-tl-lg px-4
-        py-2 bg-gradient-to-r from-black/20 via-black/10 to-transparent">
+        <div
+          className="hidden sm:block absolute -bottom-4 md:-bottom-8 right-0 w-full max-w-64 md:max-w-96 lg:max-w-lg xl:max-w-2xl z-10 shadow-sm backdrop-blur-sm rounded-tl-lg px-4
+        py-2 bg-gradient-to-r from-black/20 via-black/10 to-transparent"
+        >
           <Slider
             ref={(slider) => setThumbnailSlider(slider)}
             {...thumbnailSliderSettings}
@@ -204,26 +211,28 @@ export default function HeroSection() {
 
                   {/* Thumbnail Content */}
                   <div className="p-2 md:p-4 text-white">
-                    <span className="inline-block px-2 py-1 mb-2 text-xs font-medium uppercase tracking-wider bg-background/90 text-foreground rounded-sm">
+                    <span className="inline-block px-2 py-1 mb-2 text-xs font-medium uppercase tracking-wider bg-background text-foreground rounded-sm">
                       {slide.tagline}
                     </span>
                     <h3 className="text-xs md:text-sm lg:text-base font-semibold mb-1 line-clamp-2">
                       {slide.title}
                     </h3>
                     <p className="text-xs lg:text-sm text-white/70 font-poppins">
-                      {new Date(slide.createdAt).toLocaleDateString('en-US', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric'
+                      {new Date(slide.createdAt).toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
                       })}
                     </p>
                   </div>
 
                   {/* Progress Indicator */}
-                  <div className={cn(
-                    "absolute top-0 left-0 w-full h-1 bg-primary transform -translate-x-full transition-transform duration-[5000ms] ease-linear",
-                    activeSlide === idx && "translate-x-0"
-                  )} />
+                  <div
+                    className={cn(
+                      "absolute top-0 left-0 w-full h-1 bg-primary transform -translate-x-full transition-transform duration-[5000ms] ease-linear",
+                      activeSlide === idx && "translate-x-0"
+                    )}
+                  />
                 </div>
               </div>
             ))}
@@ -249,6 +258,5 @@ export default function HeroSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
-

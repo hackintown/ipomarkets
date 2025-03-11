@@ -1,146 +1,36 @@
-"use client";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card"
+import { Overview } from "@/components/ui/Admin/overview"
+import { RecentSales } from "@/components/ui/Admin/recent-sales"
+import { DashboardStats } from "@/components/ui/Admin/dashboard-stats"
 
-import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/Card";
-import {
-    Users,
-    FileText,
-    TrendingUp,
-    Calendar,
-    ArrowRight,
-    Activity
-} from "lucide-react";
-import Link from "next/link";
-
-interface DashboardMetric {
-    title: string;
-    value: number;
-    change: number;
-    icon: React.ReactNode;
-    color: string;
-}
-
-export default function AdminDashboard() {
-    const [metrics, setMetrics] = useState<DashboardMetric[]>([
-        {
-            title: "Total Users",
-            value: 0,
-            change: 12,
-            icon: <Users className="w-6 h-6" />,
-            color: "bg-blue-500/10 text-blue-500"
-        },
-        {
-            title: "Active IPOs",
-            value: 0,
-            change: 8,
-            icon: <Activity className="w-6 h-6" />,
-            color: "bg-green-500/10 text-green-500"
-        },
-        {
-            title: "Upcoming IPOs",
-            value: 0,
-            change: -3,
-            icon: <Calendar className="w-6 h-6" />,
-            color: "bg-purple-500/10 text-purple-500"
-        },
-        {
-            title: "Total Applications",
-            value: 0,
-            change: 24,
-            icon: <FileText className="w-6 h-6" />,
-            color: "bg-orange-500/10 text-orange-500"
-        }
-    ]);
-
-    // Simulating data fetch
-    useEffect(() => {
-        const fetchData = async () => {
-            // Replace with actual API calls
-            setMetrics(prev => prev.map(metric => ({
-                ...metric,
-                value: Math.floor(Math.random() * 1000)
-            })));
-        };
-
-        fetchData();
-    }, []);
-
-    const quickActions = [
-        {
-            title: "Manage Hero Section",
-            description: "Update homepage hero slides and content",
-            href: "/admin/home/hero",
-            icon: <TrendingUp className="w-5 h-5" />
-        },
-        {
-            title: "Add New IPO",
-            description: "Create a new IPO listing",
-            href: "/admin/current-ipos/new",
-            icon: <FileText className="w-5 h-5" />
-        },
-        {
-            title: "User Management",
-            description: "Manage user accounts and permissions",
-            href: "/admin/users",
-            icon: <Users className="w-5 h-5" />
-        }
-    ];
-
-    return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">Dashboard</h1>
-                <div className="text-sm text-muted-foreground">
-                    Last updated: {new Date().toLocaleString()}
-                </div>
-            </div>
-
-            {/* Metrics Grid */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                {metrics.map((metric, idx) => (
-                    <Card key={idx} className="p-6">
-                        <div className="flex items-center gap-4">
-                            <div className={`p-3 rounded-lg ${metric.color}`}>
-                                {metric.icon}
-                            </div>
-                            <div>
-                                <p className="text-sm font-medium text-muted-foreground">
-                                    {metric.title}
-                                </p>
-                                <h3 className="text-2xl font-bold">{metric.value}</h3>
-                                <p className={`text-sm ${metric.change > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                    {metric.change > 0 ? '+' : ''}{metric.change}% from last month
-                                </p>
-                            </div>
-                        </div>
-                    </Card>
-                ))}
-            </div>
-
-            {/* Quick Actions */}
-            <div className="space-y-4">
-                <h2 className="text-xl font-semibold">Quick Actions</h2>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {quickActions.map((action, idx) => (
-                        <Link key={idx} href={action.href}>
-                            <Card className="p-6 hover:shadow-md transition-shadow cursor-pointer group">
-                                <div className="flex items-start justify-between">
-                                    <div className="space-y-2">
-                                        <div className="p-2 w-fit rounded-md bg-primary/10 text-primary">
-                                            {action.icon}
-                                        </div>
-                                        <h3 className="font-semibold">{action.title}</h3>
-                                        <p className="text-sm text-muted-foreground">
-                                            {action.description}
-                                        </p>
-                                    </div>
-                                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:translate-x-1 transition-transform" />
-                                </div>
-                            </Card>
-                        </Link>
-                    ))}
-                </div>
-            </div>
+export default function DashboardPage() {
+  return (
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Dashboard</h1>
+      <div className="space-y-4">
+        <DashboardStats />
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <Card className="lg:col-span-4">
+            <CardHeader>
+              <CardTitle>Overview</CardTitle>
+              <CardDescription>View your sales and revenue metrics for the past 30 days.</CardDescription>
+            </CardHeader>
+            <CardContent className="pl-2">
+              {/* <Overview /> */}
+            </CardContent>
+          </Card>
+          <Card className="lg:col-span-3">
+            <CardHeader>
+              <CardTitle>Recent Sales</CardTitle>
+              <CardDescription>You made 265 sales this month.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RecentSales />
+            </CardContent>
+          </Card>
         </div>
-    );
+      </div>
+    </div>
+  )
 }
+

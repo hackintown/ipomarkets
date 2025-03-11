@@ -1,19 +1,27 @@
-import { Inter } from "next/font/google";
+import { Inter, Jost, Poppins } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/ui/Navbar/Navbar";
 import { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
+import MainLayoutWrapper from "@/components/Admin/MainLayoutWrapper";
 
 const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-inter",
-  display: "swap",
+  subsets: ["latin"],
+});
+
+const jost = Jost({
+  variable: "--font-jost",
+  subsets: ["latin"],
+});
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "IPO Market",
-  description: "Professional IT Solutions and Services",
+  title: "IPO Markets",
+  description: "IPO Markets",
 };
 
 export default function RootLayout({
@@ -23,12 +31,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
-        <ThemeProvider attribute="class">
-          <Navbar />
-          <main className="mt-[4.5rem]">{children}</main>
-        </ThemeProvider>
-      </body>
+      <MainLayoutWrapper
+        interClass={inter.variable}
+        jostClass={jost.variable}
+        poppinsClass={poppins.variable}
+      >
+        {children}
+      </MainLayoutWrapper>
     </html>
   );
 }

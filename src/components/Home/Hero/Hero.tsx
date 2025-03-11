@@ -1,55 +1,34 @@
-"use client";
-// If you're using Next.js App Router with client-side components
+"use client"
 
-import React, { useEffect, useState, useCallback } from "react";
-import Slider from "react-slick";
-// Import the CSS needed for slick
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { IHeroSlide } from "./HeroSlides";
-import { cn } from "@/lib/utils";
-// Import the CustomArrowProps type from react-slick
-import { CustomArrowProps } from "react-slick";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { useEffect, useState, useCallback } from "react"
+import Slider from "react-slick"
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
+import { cn } from "@/lib/utils"
+import Image from "next/image"
+import Link from "next/link"
+import { Button } from "@/components/ui/Button"
+import { IoArrowForwardOutline } from "react-icons/io5"
 
-/**
- * Custom arrow components for the slider
- * Implements accessible navigation controls
- */
-function PrevArrow({ onClick }: CustomArrowProps) {
-  return (
-    <Button
-      onClick={onClick}
-      variant="ghost"
-      size="icon"
-      className="absolute left-4 top-1/2 z-10 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white"
-      leftIcon={<ChevronLeft className="h-6 w-6" />}
-      aria-label="Previous Slide"
-    />
-  );
+interface IHeroSlide {
+  _id: string;
+  title: string;
+  tagline: string;
+  description: string;
+  imageUrl: string;
+  ctaLabel: string;
+  ctaLink: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-function NextArrow({ onClick }: CustomArrowProps) {
-  return (
-    <Button
-      onClick={onClick}
-      variant="ghost"
-      size="icon"
-      className="absolute right-4 top-1/2 z-10 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white"
-      leftIcon={<ChevronRight className="h-6 w-6" />}
-      aria-label="Next Slide"
-    />
-  );
-}
 
-/**
- * Hero Component
- * Displays a responsive hero section with image slider
- */
-export default function Hero() {
-  const [slides, setSlides] = useState<IHeroSlide[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default function HeroSection() {
+  const [slides, setSlides] = useState<IHeroSlide[]>([])
+  const [activeSlide, setActiveSlide] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
+  const [mainSlider, setMainSlider] = useState<Slider | null>(null)
+  const [thumbnailSlider, setThumbnailSlider] = useState<Slider | null>(null)
 
   // Fetch slides data
   const fetchSlides = useCallback(async () => {
@@ -87,109 +66,189 @@ export default function Hero() {
     );
   }
 
-  // Single slide layout
-  if (slides.length === 1) {
-    return <SingleSlide slide={slides[0]} />;
-  }
-
-  // Slider settings for multiple slides
-  const settings = {
-    dots: true,
+  // Main slider settings
+  const mainSliderSettings = {
+    dots: false,
     infinite: true,
-    speed: 500,
+    speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
-    pauseOnHover: true,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    dotsClass: "slick-dots custom-dots",
-    appendDots: (dots: React.ReactNode) => (
-      <div className="absolute bottom-4">
-        <ul className="flex gap-2"> {dots} </ul>
-      </div>
-    ),
-    customPaging: () => (
-      <button className="h-2 w-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" />
-    ),
-  };
+    fade: true,
+    beforeChange: (_: number, next: number) => setActiveSlide(next),
+    // Sync with thumbnail slider
+    asNavFor: thumbnailSlider || undefined,
+  }
+
+  // Updated thumbnail slider settings
+  const thumbnailSliderSettings = {
+    dots: false,
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    vertical: false,
+    focusOnSelect: true,
+    swipeToSlide: true,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    asNavFor: mainSlider || undefined,
+    arrows: false,
+    responsive: [
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  }
 
   return (
-    <section className="relative w-full overflow-hidden">
-      {/* Gradient overlay for navbar */}
-      <div className="absolute inset-x-0 top-0 h-32 z-10 bg-gradient-to-b from-black/50 to-transparent pointer-events-none" />
+    <section className="relative w-full min-h-[60vh] sm:min-h-[70vh] lg:min-h-[80vh] bg-background overflow-hidden">
+      {/* Main Content */}
+      <div className="relative h-full">
+        <Slider
+          ref={(slider) => setMainSlider(slider)}
+          {...mainSliderSettings}
+          className="h-full"
+        >
+          {slides.map((slide) => (
+            <div key={slide._id} className="relative h-[60vh] sm:h-[70vh] lg:h-[80vh]">
+              {/* Background Image */}
+              <div className="absolute inset-0">
+                <Image
+                  src={slide.imageUrl}
+                  alt={slide.title}
+                  fill
+                  priority
+                  className="object-cover object-top"
+                  sizes="100vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/80 to-transparent" />
+              </div>
 
-      <div className="relative">
-        <Slider {...settings} className="hero-slider">
-          {slides.map((slide, idx) => (
-            <SlideContent key={idx} slide={slide} />
+              {/* Content */}
+              <div className="relative h-full container mx-auto px-4 lg:px-6">
+                <div className="flex flex-col justify-center h-full max-w-2xl py-4">
+                  {/* Category Tag */}
+                  <span className="inline-block w-fit rounded-sm px-2 py-1 mb-3 bg-primary text-primary-foreground text-xs md:text-sm font-medium uppercase tracking-wider">
+                    {slide.tagline}
+                  </span>
+
+                  {/* Title */}
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                    {slide.title}
+                  </h1>
+
+                  {/* Description */}
+                  <p className="text-base text-white/90 mb-4 line-clamp-3 font-poppins">
+                    {slide.description}
+                  </p>
+
+                  {/* CTA Button */}
+                  <Button
+                    variant={'primary'}
+                    size="lg"
+                    className="w-fit"
+                    rightIcon={<IoArrowForwardOutline />}
+                  >
+                    <Link href={slide.ctaLink} className="flex items-center gap-2">
+                      {slide.ctaLabel}
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
           ))}
         </Slider>
+
+        {/* Thumbnail Slider Container */}
+        <div className="hidden sm:block absolute -bottom-4 md:-bottom-8 right-0 w-full max-w-64 md:max-w-96 lg:max-w-lg xl:max-w-2xl z-10 shadow-sm backdrop-blur-sm rounded-tl-lg px-4
+        py-2 bg-gradient-to-r from-black/20 via-black/10 to-transparent">
+          <Slider
+            ref={(slider) => setThumbnailSlider(slider)}
+            {...thumbnailSliderSettings}
+            className="absolute -top-10"
+          >
+            {slides.map((slide, idx) => (
+              <div key={`thumb-${slide._id}`} className="px-2">
+                <div
+                  className={cn(
+                    "relative overflow-hidden cursor-pointer group",
+                    "transition-all duration-500 ease-in-out",
+                    activeSlide === idx ? "scale-105" : "scale-100"
+                  )}
+                >
+                  {/* Thumbnail Image */}
+                  <div className="relative aspect-[4/3] rounded-md overflow-hidden">
+                    <Image
+                      src={slide.imageUrl}
+                      alt={slide.title}
+                      fill
+                      className={cn(
+                        "object-cover transform transition-transform duration-500",
+                        "group-hover:scale-105"
+                      )}
+                      sizes="(max-width: 640px) 80vw, (max-width: 1024px) 40vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
+                  </div>
+
+                  {/* Thumbnail Content */}
+                  <div className="p-2 md:p-4 text-white">
+                    <span className="inline-block px-2 py-1 mb-2 text-xs font-medium uppercase tracking-wider bg-background/90 text-foreground rounded-sm">
+                      {slide.tagline}
+                    </span>
+                    <h3 className="text-xs md:text-sm lg:text-base font-semibold mb-1 line-clamp-2">
+                      {slide.title}
+                    </h3>
+                    <p className="text-xs lg:text-sm text-white/70 font-poppins">
+                      {new Date(slide.createdAt).toLocaleDateString('en-US', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                      })}
+                    </p>
+                  </div>
+
+                  {/* Progress Indicator */}
+                  <div className={cn(
+                    "absolute top-0 left-0 w-full h-1 bg-primary transform -translate-x-full transition-transform duration-[5000ms] ease-linear",
+                    activeSlide === idx && "translate-x-0"
+                  )} />
+                </div>
+              </div>
+            ))}
+          </Slider>
+
+          {/* Navigation Arrows */}
+          {/* <div className="absolute right-4 md:right-16 top-16 -translate-y-1/2 flex gap-2 md:flex-col md:gap-1">
+            <button
+              onClick={() => thumbnailSlider?.slickPrev()}
+              className="p-1 bg-background hover:bg-background/90 rounded-sm transition-colors"
+            >
+              <span className="sr-only">Previous</span>
+              <IoArrowBackOutline className="w-4 h-4 md:w-6 md:h-6 text-primary" />
+            </button>
+            <button
+              onClick={() => thumbnailSlider?.slickNext()}
+              className="p-1 bg-background hover:bg-background/90 rounded-sm transition-colors"
+            >
+              <span className="sr-only">Next</span>
+              <IoArrowForwardOutline className="w-4 h-4 md:w-6 md:h-6 text-primary" />
+            </button>
+          </div> */}
+        </div>
       </div>
     </section>
-  );
+  )
 }
 
-/**
- * Single Slide Component
- * Renders a single slide when only one is available
- */
-function SingleSlide({ slide }: { slide: IHeroSlide }) {
-  return (
-    <section className="relative w-full overflow-hidden">
-      <div className="absolute inset-x-0 top-0 h-32 z-10 bg-gradient-to-b from-black/50 to-transparent pointer-events-none" />
-      <SlideContent slide={slide} />
-    </section>
-  );
-}
-
-/**
- * Slide Content Component
- * Renders the content for each slide
- */
-function SlideContent({ slide }: { slide: IHeroSlide }) {
-  return (
-    <div className="relative h-[70vh] w-full">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-center bg-cover bg-no-repeat transition-opacity duration-500"
-        style={{ backgroundImage: `url(${slide.imageUrl})` }}
-      />
-      
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/30" />
-
-      {/* Content */}
-      <div className="relative z-20 flex h-full flex-col items-center justify-center px-4 text-center text-white md:px-8">
-        <h2 className={cn(
-          "mb-2 text-3xl font-bold uppercase tracking-wider md:text-5xl",
-          "animate-fadeIn"
-        )}>
-          {slide.title}
-        </h2>
-        <p className={cn(
-          "mb-2 text-lg font-semibold text-primary",
-          "animate-fadeIn animation-delay-200"
-        )}>
-          {slide.tagline}
-        </p>
-        <p className={cn(
-          "mx-auto mb-6 max-w-2xl text-base md:text-lg opacity-90",
-          "animate-fadeIn animation-delay-400"
-        )}>
-          {slide.description}
-        </p>
-
-        <Button
-          variant="primary"
-          size="lg"
-          className="animate-fadeIn animation-delay-600"
-          onClick={() => window.location.href = slide.ctaLink}
-        >
-          {slide.ctaLabel}
-        </Button>
-      </div>
-    </div>
-  );
-}

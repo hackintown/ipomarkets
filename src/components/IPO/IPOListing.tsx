@@ -341,9 +341,8 @@ export default function IPOListing() {
         </div>
         <Button
           onClick={() => fetchTables()}
-          className="flex items-center gap-2"
+          leftIcon={<RefreshCw className="h-4 w-4" />}
         >
-          <RefreshCw className="h-4 w-4" />
           Refresh All
         </Button>
       </div>
@@ -383,7 +382,7 @@ export default function IPOListing() {
                       key,
                       direction:
                         currentSort?.key === key &&
-                        currentSort.direction === "asc"
+                          currentSort.direction === "asc"
                           ? "desc"
                           : "asc",
                     },
@@ -500,9 +499,9 @@ function TableDisplay({
               variant="outline"
               size="sm"
               onClick={onRefresh}
-              className="h-9"
+
+              leftIcon={<RefreshCw className="h-4 w-4" />}
             >
-              <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
             </Button>
 
@@ -511,9 +510,9 @@ function TableDisplay({
                 variant="outline"
                 size="sm"
                 onClick={onExport}
-                className="h-9"
+
+                leftIcon={<Download className="h-4 w-4" />}
               >
-                <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>
             )}
@@ -540,8 +539,7 @@ function TableDisplay({
               {table.settings.filterable && (
                 <Sheet>
                   <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-9 gap-2">
-                      <Filter className="h-4 w-4" />
+                    <Button variant="outline" size="sm" leftIcon={<Filter className="h-4 w-4" />}>
                       Filters
                       {activeFiltersCount > 0 && (
                         <Badge variant="secondary" className="ml-1">
@@ -653,11 +651,10 @@ function TableDisplay({
                           onClick={() => onSort(column.name)}
                         >
                           <ArrowUpDown
-                            className={`h-3 w-3 ${
-                              sortConfig?.key === column.name
-                                ? "text-primary"
-                                : "text-muted-foreground"
-                            }`}
+                            className={`h-3 w-3 ${sortConfig?.key === column.name
+                              ? "text-primary"
+                              : "text-muted-foreground"
+                              }`}
                           />
                         </Button>
                       )}
@@ -771,16 +768,16 @@ function formatCellValue(
     case "currency":
       return typeof value === "number"
         ? `$${value.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`
         : value;
     case "percentage":
       return typeof value === "number"
         ? `${value.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}%`
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}%`
         : value;
     case "status":
       return (

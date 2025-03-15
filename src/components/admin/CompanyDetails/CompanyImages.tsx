@@ -28,7 +28,11 @@ export default function CompanyImages({ data, onChange }: ImagesProps) {
     onChange(newImages);
   };
 
-  const updateImage = (index: number, field: keyof ImageItem, value: string) => {
+  const updateImage = (
+    index: number,
+    field: keyof ImageItem,
+    value: string
+  ) => {
     const newImages = [...data];
     newImages[index] = { ...newImages[index], [field]: value };
     onChange(newImages);
@@ -44,8 +48,11 @@ export default function CompanyImages({ data, onChange }: ImagesProps) {
 
     const newImages = [...data];
     const newIndex = direction === "up" ? index - 1 : index + 1;
-    
-    [newImages[index], newImages[newIndex]] = [newImages[newIndex], newImages[index]];
+
+    [newImages[index], newImages[newIndex]] = [
+      newImages[newIndex],
+      newImages[index],
+    ];
     onChange(newImages);
   };
 
@@ -56,7 +63,11 @@ export default function CompanyImages({ data, onChange }: ImagesProps) {
     setTimeout(() => {
       setIsUploading(false);
       // This would be the URL returned from your upload service
-      updateImage(index, "url", `https://placehold.co/600x400/00913e/FFFFFF/png?text=Image+${index + 1}`);
+      updateImage(
+        index,
+        "url",
+        `https://placehold.co/600x400/00913e/FFFFFF/png?text=Image+${index + 1}`
+      );
     }, 1500);
   };
 
@@ -100,7 +111,9 @@ export default function CompanyImages({ data, onChange }: ImagesProps) {
                     <label className="text-sm font-medium">Image URL</label>
                     <Input
                       value={image.url}
-                      onChange={(e) => updateImage(index, "url", e.target.value)}
+                      onChange={(e) =>
+                        updateImage(index, "url", e.target.value)
+                      }
                       placeholder="Enter image URL"
                     />
                   </div>
@@ -109,7 +122,9 @@ export default function CompanyImages({ data, onChange }: ImagesProps) {
                     <label className="text-sm font-medium">Caption</label>
                     <Input
                       value={image.caption}
-                      onChange={(e) => updateImage(index, "caption", e.target.value)}
+                      onChange={(e) =>
+                        updateImage(index, "caption", e.target.value)
+                      }
                       placeholder="Image description"
                     />
                   </div>
@@ -147,7 +162,7 @@ export default function CompanyImages({ data, onChange }: ImagesProps) {
                     </Button>
                     <Button
                       type="button"
-                      variant="destructive"
+                      variant="danger"
                       size="sm"
                       onClick={() => removeImage(index)}
                       leftIcon={<Trash2 className="w-4 h-4" />}
@@ -171,7 +186,9 @@ export default function CompanyImages({ data, onChange }: ImagesProps) {
                   ) : (
                     <div className="text-center text-muted-foreground">
                       <p>No image</p>
-                      <p className="text-sm">Upload an image or provide a URL</p>
+                      <p className="text-sm">
+                        Upload an image or provide a URL
+                      </p>
                     </div>
                   )}
                 </div>
@@ -182,4 +199,4 @@ export default function CompanyImages({ data, onChange }: ImagesProps) {
       )}
     </div>
   );
-} 
+}

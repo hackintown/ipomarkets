@@ -180,9 +180,9 @@ export function DashboardSidebar() {
             />
             <NavItem
               title="Add Company Details"
-              href="/admin/dashboard/add-company-details"
+              href="/admin/dashboard/company-details"
               icon={Building2}
-              isActive={pathname.startsWith("/admin/dashboard/add-company-details")}
+              isActive={pathname.startsWith("/admin/dashboard/company-details")}
             />
           </ul>
           <div className="my-2 border-t" />

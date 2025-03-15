@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Plus, Trash2, ExternalLink, MoveUp, MoveDown } from "lucide-react";
+import { Plus, Trash2, MoveUp, MoveDown } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -58,8 +57,11 @@ export default function CompanyLinks({ data, onChange }: LinksProps) {
 
     const newLinks = [...data];
     const newIndex = direction === "up" ? index - 1 : index + 1;
-    
-    [newLinks[index], newLinks[newIndex]] = [newLinks[newIndex], newLinks[index]];
+
+    [newLinks[index], newLinks[newIndex]] = [
+      newLinks[newIndex],
+      newLinks[index],
+    ];
     onChange(newLinks);
   };
 
@@ -160,7 +162,7 @@ export default function CompanyLinks({ data, onChange }: LinksProps) {
                 </Button>
                 <Button
                   type="button"
-                  variant="destructive"
+                  variant="danger"
                   size="sm"
                   onClick={() => removeLink(index)}
                   leftIcon={<Trash2 className="w-4 h-4" />}
@@ -174,4 +176,4 @@ export default function CompanyLinks({ data, onChange }: LinksProps) {
       )}
     </div>
   );
-} 
+}

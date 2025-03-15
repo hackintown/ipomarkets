@@ -10,7 +10,7 @@ interface LogoProps {
     url: string;
     alt: string;
   };
-  onChange: (data: any) => void;
+  onChange: (data: LogoProps["data"]) => void;
 }
 
 export default function CompanyLogo({ data, onChange }: LogoProps) {
@@ -30,7 +30,10 @@ export default function CompanyLogo({ data, onChange }: LogoProps) {
     setTimeout(() => {
       setIsUploading(false);
       // This would be the URL returned from your upload service
-      handleChange("url", "https://placehold.co/400x200/00913e/FFFFFF/png?text=Company+Logo");
+      handleChange(
+        "url",
+        "https://placehold.co/400x200/00913e/FFFFFF/png?text=Company+Logo"
+      );
     }, 1500);
   };
 
@@ -85,7 +88,7 @@ export default function CompanyLogo({ data, onChange }: LogoProps) {
                 className="object-contain"
               />
               <Button
-                variant="destructive"
+                variant="danger"
                 size="sm"
                 className="absolute -top-2 -right-2 rounded-full p-1 h-auto"
                 onClick={() => handleChange("url", "")}
@@ -103,4 +106,4 @@ export default function CompanyLogo({ data, onChange }: LogoProps) {
       </div>
     </div>
   );
-} 
+}

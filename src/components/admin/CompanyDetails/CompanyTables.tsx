@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Plus, Trash2, Table, Edit, Save, X } from "lucide-react";
+import { Plus, Trash2, Edit, Save, X } from "lucide-react";
 import {
   Table as UITable,
   TableBody,
@@ -12,9 +12,14 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 
+// Define a type for table data to replace 'any'
+interface TableData {
+  [key: string]: string | number | boolean | null;
+}
+
 interface TableItem {
   title: string;
-  data: any[];
+  data: TableData[];
 }
 
 interface TablesProps {
@@ -24,12 +29,15 @@ interface TablesProps {
 
 export default function CompanyTables({ data, onChange }: TablesProps) {
   const [editingTable, setEditingTable] = useState<number | null>(null);
-  const [editingCell, setEditingCell] = useState<{ row: number; col: number } | null>(null);
-  const [tempTableData, setTempTableData] = useState<any[]>([]);
+  const [editingCell, setEditingCell] = useState<{
+    row: number;
+    col: number;
+  } | null>(null);
+  const [tempTableData, setTempTableData] = useState<TableData[]>([]);
   const [tempTitle, setTempTitle] = useState("");
 
   const addTable = () => {
-    onChange([...data, { title: "New Table", data: [{}] }]);
+    onChange([...data, { title: "New Table", data: [{}] as TableData[] }]);
   };
 
   const removeTable = (index: number) => {
@@ -46,13 +54,13 @@ export default function CompanyTables({ data, onChange }: TablesProps) {
 
   const saveTableChanges = () => {
     if (editingTable === null) return;
-    
+
     const newTables = [...data];
     newTables[editingTable] = {
       title: tempTitle,
       data: tempTableData,
     };
-    
+
     onChange(newTables);
     setEditingTable(null);
     setEditingCell(null);
@@ -65,61 +73,65 @@ export default function CompanyTables({ data, onChange }: TablesProps) {
 
   const addRow = () => {
     if (editingTable === null) return;
-    
-    const newRow = {};
+
+    const newRow: TableData = {};
     // Copy structure from first row if it exists
     if (tempTableData.length > 0) {
-      Object.keys(tempTableData[0]).forEach(key => {
-        newRow[key] = "";
+      Object.keys(tempTableData[0]).forEach((key) => {
+        newRow[key] = ""; // Now TypeScript knows newRow can be indexed with string
       });
     }
-    
+
     setTempTableData([...tempTableData, newRow]);
   };
 
   const addColumn = () => {
     if (editingTable === null) return;
-    
+
     const columnName = prompt("Enter column name:");
     if (!columnName) return;
-    
-    const newData = tempTableData.map(row => ({
+
+    const newData = tempTableData.map((row) => ({
       ...row,
       [columnName]: "",
     }));
-    
+
     setTempTableData(newData);
   };
 
   const removeColumn = (columnName: string) => {
     if (editingTable === null) return;
-    
-    const newData = tempTableData.map(row => {
+
+    const newData = tempTableData.map((row) => {
       const newRow = { ...row };
       delete newRow[columnName];
       return newRow;
     });
-    
+
     setTempTableData(newData);
   };
 
   const removeRow = (rowIndex: number) => {
     if (editingTable === null) return;
-    
+
     const newData = [...tempTableData];
     newData.splice(rowIndex, 1);
     setTempTableData(newData);
   };
 
-  const updateCellValue = (rowIndex: number, columnName: string, value: string) => {
+  const updateCellValue = (
+    rowIndex: number,
+    columnName: string,
+    value: string
+  ) => {
     if (editingTable === null) return;
-    
+
     const newData = [...tempTableData];
     newData[rowIndex] = {
       ...newData[rowIndex],
       [columnName]: value,
     };
-    
+
     setTempTableData(newData);
   };
 
@@ -203,7 +215,8 @@ export default function CompanyTables({ data, onChange }: TablesProps) {
                   </div>
 
                   <div className="overflow-x-auto">
-                    {tempTableData.length > 0 && Object.keys(tempTableData[0]).length > 0 ? (
+                    {tempTableData.length > 0 &&
+                    Object.keys(tempTableData[0]).length > 0 ? (
                       <UITable>
                         <TableHeader>
                           <TableRow>
@@ -228,25 +241,39 @@ export default function CompanyTables({ data, onChange }: TablesProps) {
                         <TableBody>
                           {tempTableData.map((row, rowIndex) => (
                             <TableRow key={rowIndex}>
-                              {Object.entries(row).map(([column, value], cellIndex) => (
-                                <TableCell key={`${rowIndex}-${column}`}>
-                                  {editingCell?.row === rowIndex && editingCell?.col === cellIndex ? (
-                                    <Input
-                                      value={String(value)}
-                                      onChange={(e) => updateCellValue(rowIndex, column, e.target.value)}
-                                      onBlur={() => setEditingCell(null)}
-                                      autoFocus
-                                    />
-                                  ) : (
-                                    <div
-                                      className="cursor-pointer p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
-                                      onClick={() => setEditingCell({ row: rowIndex, col: cellIndex })}
-                                    >
-                                      {String(value) || "-"}
-                                    </div>
-                                  )}
-                                </TableCell>
-                              ))}
+                              {Object.entries(row).map(
+                                ([column, value], cellIndex) => (
+                                  <TableCell key={`${rowIndex}-${column}`}>
+                                    {editingCell?.row === rowIndex &&
+                                    editingCell?.col === cellIndex ? (
+                                      <Input
+                                        value={String(value)}
+                                        onChange={(e) =>
+                                          updateCellValue(
+                                            rowIndex,
+                                            column,
+                                            e.target.value
+                                          )
+                                        }
+                                        onBlur={() => setEditingCell(null)}
+                                        autoFocus
+                                      />
+                                    ) : (
+                                      <div
+                                        className="cursor-pointer p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+                                        onClick={() =>
+                                          setEditingCell({
+                                            row: rowIndex,
+                                            col: cellIndex,
+                                          })
+                                        }
+                                      >
+                                        {String(value) || "-"}
+                                      </div>
+                                    )}
+                                  </TableCell>
+                                )
+                              )}
                               <TableCell>
                                 <Button
                                   variant="ghost"
@@ -263,7 +290,9 @@ export default function CompanyTables({ data, onChange }: TablesProps) {
                       </UITable>
                     ) : (
                       <div className="text-center p-4">
-                        <p className="text-muted-foreground">No data in table</p>
+                        <p className="text-muted-foreground">
+                          No data in table
+                        </p>
                         <Button
                           variant="outline"
                           size="sm"
@@ -290,7 +319,7 @@ export default function CompanyTables({ data, onChange }: TablesProps) {
                         Edit
                       </Button>
                       <Button
-                        variant="destructive"
+                        variant="danger"
                         size="sm"
                         onClick={() => removeTable(index)}
                         leftIcon={<Trash2 className="w-4 h-4" />}
@@ -301,7 +330,8 @@ export default function CompanyTables({ data, onChange }: TablesProps) {
                   </div>
 
                   <div className="overflow-x-auto">
-                    {table.data.length > 0 && Object.keys(table.data[0]).length > 0 ? (
+                    {table.data.length > 0 &&
+                    Object.keys(table.data[0]).length > 0 ? (
                       <UITable>
                         <TableHeader>
                           <TableRow>
@@ -324,7 +354,9 @@ export default function CompanyTables({ data, onChange }: TablesProps) {
                       </UITable>
                     ) : (
                       <div className="text-center p-4">
-                        <p className="text-muted-foreground">No data in table</p>
+                        <p className="text-muted-foreground">
+                          No data in table
+                        </p>
                         <Button
                           variant="outline"
                           size="sm"
@@ -344,4 +376,4 @@ export default function CompanyTables({ data, onChange }: TablesProps) {
       )}
     </div>
   );
-} 
+}

@@ -463,6 +463,7 @@ function renderFormField(
       return (
         <RichTextEditor
           {...fieldProps}
+          value=""
           onChange={(value: string) => {
             fieldProps.onChange({ target: { value: value || "" } });
           }}

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -8,7 +7,9 @@ import dynamic from "next/dynamic";
 // Dynamically import the rich text editor to avoid SSR issues
 const RichTextEditor = dynamic(() => import("@/components/ui/RichTextEditor"), {
   ssr: false,
-  loading: () => <div className="h-64 border rounded-md bg-gray-50 animate-pulse" />,
+  loading: () => (
+    <div className="h-64 border rounded-md bg-gray-50 animate-pulse" />
+  ),
 });
 
 interface ContentItem {
@@ -24,14 +25,10 @@ interface ContentProps {
 
 export default function CompanyContent({ data, onChange }: ContentProps) {
   const addContent = () => {
-    const newOrder = data.length > 0 
-      ? Math.max(...data.map(item => item.order)) + 1 
-      : 0;
-      
-    onChange([
-      ...data,
-      { title: "", body: "", order: newOrder },
-    ]);
+    const newOrder =
+      data.length > 0 ? Math.max(...data.map((item) => item.order)) + 1 : 0;
+
+    onChange([...data, { title: "", body: "", order: newOrder }]);
   };
 
   const removeContent = (index: number) => {
@@ -40,7 +37,11 @@ export default function CompanyContent({ data, onChange }: ContentProps) {
     onChange(newContent);
   };
 
-  const updateContent = (index: number, field: keyof ContentItem, value: string | number) => {
+  const updateContent = (
+    index: number,
+    field: keyof ContentItem,
+    value: string | number
+  ) => {
     const newContent = [...data];
     newContent[index] = { ...newContent[index], [field]: value };
     onChange(newContent);
@@ -56,15 +57,18 @@ export default function CompanyContent({ data, onChange }: ContentProps) {
 
     const newContent = [...data];
     const newIndex = direction === "up" ? index - 1 : index + 1;
-    
+
     // Swap order values
     const tempOrder = newContent[index].order;
     newContent[index].order = newContent[newIndex].order;
     newContent[newIndex].order = tempOrder;
-    
+
     // Swap positions in array
-    [newContent[index], newContent[newIndex]] = [newContent[newIndex], newContent[index]];
-    
+    [newContent[index], newContent[newIndex]] = [
+      newContent[newIndex],
+      newContent[index],
+    ];
+
     onChange(newContent);
   };
 
@@ -111,7 +115,9 @@ export default function CompanyContent({ data, onChange }: ContentProps) {
                     <label className="text-sm font-medium">Section Title</label>
                     <Input
                       value={content.title}
-                      onChange={(e) => updateContent(index, "title", e.target.value)}
+                      onChange={(e) =>
+                        updateContent(index, "title", e.target.value)
+                      }
                       placeholder="e.g., About Us, Our Mission, etc."
                     />
                   </div>
@@ -138,7 +144,7 @@ export default function CompanyContent({ data, onChange }: ContentProps) {
                     </Button>
                     <Button
                       type="button"
-                      variant="destructive"
+                      variant="danger"
                       size="sm"
                       onClick={() => removeContent(index)}
                       leftIcon={<Trash2 className="w-4 h-4" />}
@@ -163,4 +169,4 @@ export default function CompanyContent({ data, onChange }: ContentProps) {
       )}
     </div>
   );
-} 
+}

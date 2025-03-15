@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Textarea } from "@/components/ui/Textarea";
 
 interface RichTextEditorProps {
@@ -11,7 +10,11 @@ interface RichTextEditorProps {
 
 // This is a simple placeholder for a rich text editor
 // In a real application, you would integrate a proper rich text editor like TipTap, Slate, or CKEditor
-export default function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
+export default function RichTextEditor({
+  value,
+  onChange,
+  placeholder,
+}: RichTextEditorProps) {
   return (
     <Textarea
       value={value}
@@ -21,4 +24,4 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
       className="min-h-[200px]"
     />
   );
-} 
+}

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 
@@ -12,7 +11,7 @@ interface BasicInfoProps {
     employees: string;
     website: string;
   };
-  onChange: (data: any) => void;
+  onChange: (data: BasicInfoProps["data"]) => void;
 }
 
 export default function CompanyBasicInfo({ data, onChange }: BasicInfoProps) {
@@ -98,4 +97,4 @@ export default function CompanyBasicInfo({ data, onChange }: BasicInfoProps) {
       </div>
     </div>
   );
-} 
+}

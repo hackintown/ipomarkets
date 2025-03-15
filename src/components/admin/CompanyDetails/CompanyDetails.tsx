@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/Select";
 import { toast } from "react-hot-toast";
-import { PlusCircle, Save, Image, Table, Link, FileText, Trash2 } from "lucide-react";
+import { PlusCircle, Save, Trash2 } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import CompanyBasicInfo from "./CompanyBasicInfo";
 import CompanyLogo from "./CompanyLogo";
@@ -21,13 +21,19 @@ import CompanyTables from "./CompanyTables";
 import CompanyLinks from "./CompanyLinks";
 import CompanyContent from "./CompanyContent";
 
-// Types for table structure and company data
+/**
+ * Type Definitions
+ * Structured interfaces for data models used throughout the component
+ */
+
+// Column definition for table structure
 interface Column {
   name: string;
   type: string;
   required: boolean;
 }
 
+// Table structure definition
 interface Table {
   _id: string;
   tableName: string;
@@ -35,12 +41,22 @@ interface Table {
   columns: Column[];
 }
 
+// Company option for dropdown selection
 interface CompanyOption {
   _id: string;
   name: string;
   tableId: string;
 }
 
+// Generic table data type for dynamic table content
+interface TableData {
+  [key: string]: string | number | boolean | null;
+}
+
+/**
+ * CompanyDetails interface - Main data model for company information
+ * Contains all sections of company information that can be edited
+ */
 interface CompanyDetails {
   _id?: string;
   companyId: string;
@@ -65,7 +81,7 @@ interface CompanyDetails {
   }>;
   tables: Array<{
     title: string;
-    data: any[];
+    data: TableData[];
   }>;
   links: Array<{
     title: string;
@@ -79,23 +95,43 @@ interface CompanyDetails {
   }>;
 }
 
+/**
+ * CompanyDetails Component
+ *
+ * A comprehensive admin interface for managing detailed company information.
+ * Supports creating, updating, and deleting company details with multiple
+ * content sections organized in tabs.
+ */
 export default function CompanyDetails() {
-  // State management
+  // =========================================================================
+  // State Management
+  // =========================================================================
   const [tables, setTables] = useState<Table[]>([]);
   const [selectedTable, setSelectedTable] = useState<string>("");
   const [companies, setCompanies] = useState<CompanyOption[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string>("");
-  const [companyDetails, setCompanyDetails] = useState<CompanyDetails | null>(null);
+  const [companyDetails, setCompanyDetails] = useState<CompanyDetails | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("basic-info");
 
-  // Fetch tables on component mount
+  // =========================================================================
+  // Data Fetching & Lifecycle Hooks
+  // =========================================================================
+
+  /**
+   * Initialize component by fetching available tables
+   */
   useEffect(() => {
     fetchTables();
   }, []);
 
-  // Fetch companies when a table is selected
+  /**
+   * Fetch companies when a table is selected
+   * Reset companies and selection when table changes
+   */
   useEffect(() => {
     if (selectedTable) {
       fetchCompanies(selectedTable);
@@ -105,20 +141,29 @@ export default function CompanyDetails() {
     }
   }, [selectedTable]);
 
-  // Fetch company details when a company is selected
+  /**
+   * Fetch or initialize company details when a company is selected
+   */
   useEffect(() => {
     if (selectedCompany) {
       fetchCompanyDetails(selectedCompany);
     } else {
       setCompanyDetails(null);
     }
-  }, [selectedCompany]);
+  }, [selectedCompany, companies, selectedTable]);
 
-  // Fetch available tables
+  // =========================================================================
+  // API Interaction Methods
+  // =========================================================================
+
+  /**
+   * Fetch all available tables from the API
+   */
   const fetchTables = async () => {
     try {
       setIsLoading(true);
       const response = await fetch("/api/tables");
+
       if (!response.ok) throw new Error("Failed to fetch tables");
 
       const result = await response.json();
@@ -132,11 +177,16 @@ export default function CompanyDetails() {
     }
   };
 
-  // Fetch companies from a specific table
+  /**
+   * Fetch companies associated with a specific table
+   *
+   * @param tableId - The ID of the table to fetch companies for
+   */
   const fetchCompanies = async (tableId: string) => {
     try {
       setIsLoading(true);
       const response = await fetch(`/api/companies?tableId=${tableId}`);
+
       if (!response.ok) throw new Error("Failed to fetch companies");
 
       const result = await response.json();
@@ -150,44 +200,27 @@ export default function CompanyDetails() {
     }
   };
 
-  // Fetch company details
+  /**
+   * Fetch company details for a specific company
+   * If no details exist, initialize a new empty structure
+   *
+   * @param companyId - The ID of the company to fetch details for
+   */
   const fetchCompanyDetails = async (companyId: string) => {
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/company-details/${companyId}`);
-      
-      if (response.status === 404) {
-        // Create new empty company details structure
-        const selectedCompanyData = companies.find(c => c._id === companyId);
-        if (selectedCompanyData) {
-          setCompanyDetails({
-            companyId,
-            tableId: selectedTable,
-            companyName: selectedCompanyData.name,
-            basicInfo: {
-              description: "",
-              industry: "",
-              founded: "",
-              headquarters: "",
-              ceo: "",
-              employees: "",
-              website: "",
-            },
-            logo: {
-              url: "",
-              alt: "",
-            },
-            images: [],
-            tables: [],
-            links: [],
-            content: [],
-          });
-        }
-        setIsLoading(false);
-        return;
-      }
+      const response = await fetch(
+        `/api/company-details?companyId=${companyId}`
+      );
 
-      if (!response.ok) throw new Error("Failed to fetch company details");
+      if (!response.ok) {
+        if (response.status === 404) {
+          // Initialize new empty company details structure
+          initializeNewCompanyDetails(companyId);
+          return;
+        }
+        throw new Error("Failed to fetch company details");
+      }
 
       const result = await response.json();
       setCompanyDetails(result.data);
@@ -199,52 +232,160 @@ export default function CompanyDetails() {
     }
   };
 
-  // Save company details
-  const saveCompanyDetails = async () => {
-    if (!companyDetails) return;
+  /**
+   * Initialize a new empty company details structure
+   *
+   * @param companyId - The ID of the company to create details for
+   */
+  const initializeNewCompanyDetails = (companyId: string) => {
+    const selectedCompanyData = companies.find((c) => c._id === companyId);
 
+    if (selectedCompanyData) {
+      setCompanyDetails({
+        companyId,
+        tableId: selectedTable,
+        companyName: selectedCompanyData.name,
+        basicInfo: {
+          description: "",
+          industry: "",
+          founded: "",
+          headquarters: "",
+          ceo: "",
+          employees: "",
+          website: "",
+        },
+        logo: {
+          url: "",
+          alt: "",
+        },
+        images: [],
+        tables: [],
+        links: [],
+        content: [],
+      });
+    }
+  };
+
+  /**
+   * Save company details - handles both creation and updates
+   * Uses different endpoints based on whether the record exists
+   */
+  const saveCompanyDetails = async () => {
     try {
       setIsSaving(true);
-      const url = companyDetails._id 
-        ? `/api/company-details/${companyDetails._id}` 
+
+      // Validate required selections
+      if (!companyDetails || !selectedTable || !selectedCompany) {
+        toast.error("Please select a company and table first");
+        return;
+      }
+
+      // Prepare payload with latest data
+      const payload = {
+        ...companyDetails,
+        companyId: selectedCompany,
+        tableId: selectedTable,
+        companyName:
+          companies.find((c) => c._id === selectedCompany)?.name || "",
+      };
+
+      // Determine if this is an update or create operation
+      const isUpdate = companyDetails._id !== undefined;
+      const url = isUpdate
+        ? `/api/company-details/${companyDetails._id}`
         : "/api/company-details";
-      
-      const method = companyDetails._id ? "PUT" : "POST";
-      
+      const method = isUpdate ? "PUT" : "POST";
+
+      // Send request to API
       const response = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(companyDetails),
+        body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error("Failed to save company details");
-
       const result = await response.json();
-      
-      // Update the state with the returned data (including _id for new entries)
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to save company details");
+      }
+
+      // Update state with returned data
       setCompanyDetails(result.data);
-      
       toast.success("Company details saved successfully");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error saving company details:", error);
-      toast.error("Failed to save company details");
+
+      // Extract error message with type safety
+      let errorMessage = "Failed to save company details";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage);
     } finally {
       setIsSaving(false);
     }
   };
 
-  // Update specific section of company details
-  const updateCompanyDetails = (section: string, data: any) => {
+  /**
+   * Delete company details after confirmation
+   */
+  const deleteCompanyDetails = async () => {
+    // Validate and confirm deletion
+    if (
+      !companyDetails ||
+      !window.confirm("Are you sure you want to delete these company details?")
+    ) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        `/api/company-details?companyId=${companyDetails.companyId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete company details");
+      }
+
+      toast.success("Company details deleted successfully");
+      setCompanyDetails(null);
+      setSelectedCompany("");
+    } catch (error) {
+      console.error("Error deleting company details:", error);
+      toast.error("Failed to delete company details");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /**
+   * Update a specific section of company details
+   *
+   * @param section - The section key to update
+   * @param data - The new data for the section
+   */
+  const updateCompanyDetails = (
+    section: keyof CompanyDetails,
+    data: unknown
+  ) => {
     if (!companyDetails) return;
-    
+
     setCompanyDetails({
       ...companyDetails,
       [section]: data,
     });
   };
 
+  // =========================================================================
+  // Render Loading State
+  // =========================================================================
   if (isLoading && !companyDetails) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -253,30 +394,53 @@ export default function CompanyDetails() {
     );
   }
 
+  // =========================================================================
+  // Main Component Render
+  // =========================================================================
   return (
     <div className="space-y-6 p-4 md:p-6">
-      {/* Header Section */}
+      {/* Header Section with Title and Action Buttons */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Company Details</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            Company Details
+          </h1>
           <p className="text-sm lg:text-base text-muted-foreground">
             Manage detailed information for companies
           </p>
         </div>
 
         {companyDetails && (
-          <Button 
-            variant="primary" 
-            onClick={saveCompanyDetails}
-            disabled={isSaving}
-            leftIcon={isSaving ? <Loader className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-          >
-            {isSaving ? "Saving..." : "Save Changes"}
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="primary"
+              onClick={saveCompanyDetails}
+              disabled={isSaving || isLoading}
+              leftIcon={
+                isSaving ? (
+                  <div className="w-4 h-4">
+                    <Loader />
+                  </div>
+                ) : (
+                  <Save className="w-4 h-4" />
+                )
+              }
+            >
+              {isSaving ? "Saving..." : "Save Changes"}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={deleteCompanyDetails}
+              disabled={isLoading || isSaving}
+              leftIcon={<Trash2 className="w-4 h-4" />}
+            >
+              Delete
+            </Button>
+          </div>
         )}
       </div>
 
-      {/* Selection Controls */}
+      {/* Selection Controls for Table and Company */}
       <Card className="p-4 md:p-6">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
@@ -303,8 +467,8 @@ export default function CompanyDetails() {
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Select Company</label>
-            <Select 
-              value={selectedCompany} 
+            <Select
+              value={selectedCompany}
               onValueChange={setSelectedCompany}
               disabled={!selectedTable || companies.length === 0}
             >
@@ -320,7 +484,9 @@ export default function CompanyDetails() {
                   ))
                 ) : (
                   <SelectItem value="no-companies" disabled>
-                    {selectedTable ? "No companies available" : "Select a table first"}
+                    {selectedTable
+                      ? "No companies available"
+                      : "Select a table first"}
                   </SelectItem>
                 )}
               </SelectContent>
@@ -329,71 +495,89 @@ export default function CompanyDetails() {
         </div>
       </Card>
 
-      {/* Company Details Editor */}
+      {/* Company Details Editor with Tabs */}
       {companyDetails ? (
         <Card className="p-0 overflow-hidden">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="w-full justify-start border-b rounded-none px-4">
-              <TabsTrigger value="basic-info" className="data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              <TabsTrigger
+                value="basic-info"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
                 Basic Info
               </TabsTrigger>
-              <TabsTrigger value="logo" className="data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              <TabsTrigger
+                value="logo"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
                 Logo
               </TabsTrigger>
-              <TabsTrigger value="images" className="data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              <TabsTrigger
+                value="images"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
                 Images
               </TabsTrigger>
-              <TabsTrigger value="tables" className="data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              <TabsTrigger
+                value="tables"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
                 Tables
               </TabsTrigger>
-              <TabsTrigger value="links" className="data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              <TabsTrigger
+                value="links"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
                 Links
               </TabsTrigger>
-              <TabsTrigger value="content" className="data-[state=active]:border-b-2 data-[state=active]:border-primary">
+              <TabsTrigger
+                value="content"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
                 Content
               </TabsTrigger>
             </TabsList>
-            
+
             <div className="p-4 md:p-6">
               <TabsContent value="basic-info">
-                <CompanyBasicInfo 
-                  data={companyDetails.basicInfo} 
-                  onChange={(data) => updateCompanyDetails('basicInfo', data)} 
+                <CompanyBasicInfo
+                  data={companyDetails.basicInfo}
+                  onChange={(data) => updateCompanyDetails("basicInfo", data)}
                 />
               </TabsContent>
-              
+
               <TabsContent value="logo">
-                <CompanyLogo 
-                  data={companyDetails.logo} 
-                  onChange={(data) => updateCompanyDetails('logo', data)} 
+                <CompanyLogo
+                  data={companyDetails.logo}
+                  onChange={(data) => updateCompanyDetails("logo", data)}
                 />
               </TabsContent>
-              
+
               <TabsContent value="images">
-                <CompanyImages 
-                  data={companyDetails.images} 
-                  onChange={(data) => updateCompanyDetails('images', data)} 
+                <CompanyImages
+                  data={companyDetails.images}
+                  onChange={(data) => updateCompanyDetails("images", data)}
                 />
               </TabsContent>
-              
+
               <TabsContent value="tables">
-                <CompanyTables 
-                  data={companyDetails.tables} 
-                  onChange={(data) => updateCompanyDetails('tables', data)} 
+                <CompanyTables
+                  data={companyDetails.tables}
+                  onChange={(data) => updateCompanyDetails("tables", data)}
                 />
               </TabsContent>
-              
+
               <TabsContent value="links">
-                <CompanyLinks 
-                  data={companyDetails.links} 
-                  onChange={(data) => updateCompanyDetails('links', data)} 
+                <CompanyLinks
+                  data={companyDetails.links}
+                  onChange={(data) => updateCompanyDetails("links", data)}
                 />
               </TabsContent>
-              
+
               <TabsContent value="content">
-                <CompanyContent 
-                  data={companyDetails.content} 
-                  onChange={(data) => updateCompanyDetails('content', data)} 
+                <CompanyContent
+                  data={companyDetails.content}
+                  onChange={(data) => updateCompanyDetails("content", data)}
                 />
               </TabsContent>
             </div>
@@ -410,4 +594,4 @@ export default function CompanyDetails() {
       )}
     </div>
   );
-} 
+}

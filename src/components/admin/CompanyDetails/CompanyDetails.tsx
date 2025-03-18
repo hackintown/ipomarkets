@@ -20,6 +20,8 @@ import CompanyImages from "./CompanyImages";
 import CompanyTables from "./CompanyTables";
 import CompanyLinks from "./CompanyLinks";
 import CompanyContent from "./CompanyContent";
+import CompanyReviews from "./CompanyReviews";
+import CompanyNews from "./CompanyNews";
 
 /**
  * Type Definitions
@@ -93,6 +95,26 @@ interface CompanyDetails {
     body: string;
     order: number;
   }>;
+  reviews: Array<{
+    title: string;
+    content: string;
+    rating: number;
+    author: string;
+    date: string;
+    type: "table" | "list" | "content";
+    listItems?: string[];
+    tableData?: TableData[];
+  }>;
+  news: Array<{
+    title: string;
+    url: string;
+    date: string;
+    time: string;
+    description: string;
+    content: string;
+    source: string;
+    order: number;
+  }>;
 }
 
 /**
@@ -150,7 +172,7 @@ export default function CompanyDetails() {
     } else {
       setCompanyDetails(null);
     }
-  }, [selectedCompany, companies, selectedTable]);
+  }, [selectedCompany, companies, selectedTable]);  
 
   // =========================================================================
   // API Interaction Methods
@@ -262,6 +284,8 @@ export default function CompanyDetails() {
         tables: [],
         links: [],
         content: [],
+        reviews: [],
+        news: [],
       });
     }
   };
@@ -536,6 +560,18 @@ export default function CompanyDetails() {
               >
                 Content
               </TabsTrigger>
+              <TabsTrigger
+                value="reviews"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
+                Reviews
+              </TabsTrigger>
+              <TabsTrigger
+                value="news"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
+                News
+              </TabsTrigger>
             </TabsList>
 
             <div className="p-4 md:p-6">
@@ -578,6 +614,20 @@ export default function CompanyDetails() {
                 <CompanyContent
                   data={companyDetails.content}
                   onChange={(data) => updateCompanyDetails("content", data)}
+                />
+              </TabsContent>
+
+              <TabsContent value="reviews">
+                <CompanyReviews
+                  data={companyDetails.reviews || []}
+                  onChange={(data) => updateCompanyDetails("reviews", data)}
+                />
+              </TabsContent>
+
+              <TabsContent value="news">
+                <CompanyNews
+                  data={companyDetails.news || []}
+                  onChange={(data) => updateCompanyDetails("news", data)}
                 />
               </TabsContent>
             </div>

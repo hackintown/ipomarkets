@@ -79,6 +79,36 @@ const companyDetailsSchema = z.object({
     )
     .optional()
     .default([]),
+  reviews: z
+    .array(
+      z.object({
+        title: z.string(),
+        content: z.string(),
+        rating: z.number(),
+        author: z.string(),
+        date: z.string(),
+        type: z.enum(["table", "list", "content"]),
+        listItems: z.array(z.string()).optional(),
+        tableData: z.array(z.record(z.any())).optional(),
+      })
+    )
+    .optional()
+    .default([]),
+  news: z
+    .array(
+      z.object({
+        title: z.string(),
+        url: z.string(),
+        date: z.string(),
+        time: z.string(),
+        description: z.string(),
+        content: z.string(),
+        source: z.string(),
+        order: z.number(),
+      })
+    )
+    .optional()
+    .default([]),
 });
 
 // GET endpoint to fetch all company details

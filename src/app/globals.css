@@ -159,14 +159,6 @@
   .nav-container {
     @apply fixed w-full top-0 z-50 bg-background;
   }
-
-  /* A "scrolled" state style for the navbar */
-  .nav-scrolled {
-    @apply flex w-full items-center justify-center shadow-sm;
-    @apply bg-opacity-80 backdrop-blur-sm;
-    @apply bg-white dark:bg-background dark:shadow-md dark:backdrop-blur-sm;
-  }
-
   /* Navbar link style */
   .nav-link {
     @apply relative text-foreground/80 hover:text-foreground transition-colors duration-200;

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useCallback, useState, memo } from "react";
 import DesktopMenu from "./DesktopMenu";
 import MobMenu from "./MobMenu";
 import { NAVIGATION_MENUS } from "./constants";
@@ -16,22 +16,23 @@ import { Button } from "../Button";
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
+  const handleScroll = useCallback(
+    throttle(() => {
       setIsScrolled(window.scrollY > 20);
-    };
+    }, 100),
+    []
+  );
 
-    const throttledHandleScroll = throttle(handleScroll, 100);
-    window.addEventListener("scroll", throttledHandleScroll);
-
-    return () => window.removeEventListener("scroll", throttledHandleScroll);
-  }, []);
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   return (
     <motion.header
       className={cn(
-        "nav-container",
-        isScrolled ? "nav-scrolled" : "bg-background",
+        "fixed top-0 left-0 right-0 z-50 w-full backdrop-blur-sm",
+        isScrolled ? "bg-background/80 shadow-sm" : "bg-background",
         "py-1"
       )}
       initial={{ y: -100 }}
@@ -64,7 +65,7 @@ export default function Navbar() {
   );
 }
 
-const Logo = () => (
+const Logo = memo(() => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -84,9 +85,10 @@ const Logo = () => (
       />
     </Link>
   </motion.div>
-);
+));
+Logo.displayName = 'Logo';
 
-const DesktopNavigation = () => (
+const DesktopNavigation = memo(() => (
   <nav className="hidden lg:flex items-center gap-2">
     <ul className="flex items-center gap-2 text-base">
       {NAVIGATION_MENUS.map((menu) => (
@@ -94,4 +96,5 @@ const DesktopNavigation = () => (
       ))}
     </ul>
   </nav>
-);
+));
+DesktopNavigation.displayName = 'DesktopNavigation';

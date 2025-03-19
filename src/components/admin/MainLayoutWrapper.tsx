@@ -26,11 +26,9 @@ export default function MainLayoutWrapper({
     <body className={`${interClass} ${jostClass} ${poppinsClass} antialiased`}>
       <ThemeProvider attribute="class">
         {!isAdminRoute && (
-          <div className="fixed top-0 w-full z-50 flex flex-col">
-            <Navbar />
-          </div>
+          <Navbar />
         )}
-        <main className={isAdminRoute ? "" : "pt-36 sm:pt-32"}>{children}</main>
+        <main className={isAdminRoute ? "" : "pt-20"}>{children}</main>
         {!isAdminRoute && <Footer />}
       </ThemeProvider>
       <Toaster

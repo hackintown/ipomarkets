@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   try {
     // Extract and validate request body
     const { tableId, data } = await request.json();
-    
+
     if (!tableId || !data) {
       return NextResponse.json(
         { error: "Table ID and data are required" },
@@ -28,18 +28,15 @@ export async function POST(request: Request) {
     }
 
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB_NAME || "create-table");
+    const db = client.db(process.env.MONGODB_DB_NAME || "ipomarketsdb");
 
     // Verify table existence before inserting data
     const table = await db.collection("tables").findOne({
-      _id: new ObjectId(tableId)
+      _id: new ObjectId(tableId),
     });
 
     if (!table) {
-      return NextResponse.json(
-        { error: "Table not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Table not found" }, { status: 404 });
     }
 
     // Prepare data with metadata
@@ -52,11 +49,11 @@ export async function POST(request: Request) {
 
     // Insert data into collection
     const result = await db.collection("tableData").insertOne(tableData);
-    
+
     return NextResponse.json(
-      { 
-        success: true, 
-        data: { ...tableData, _id: result.insertedId }
+      {
+        success: true,
+        data: { ...tableData, _id: result.insertedId },
       },
       { status: 201 }
     );
@@ -79,7 +76,7 @@ export async function GET(request: Request) {
     // Extract and validate query parameters
     const { searchParams } = new URL(request.url);
     const tableId = searchParams.get("tableId");
-    
+
     if (!tableId) {
       return NextResponse.json(
         { error: "Table ID is required" },
@@ -96,18 +93,15 @@ export async function GET(request: Request) {
     }
 
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB_NAME || "create-table");
+    const db = client.db(process.env.MONGODB_DB_NAME || "ipomarketsdb");
 
     // Verify table existence
     const table = await db.collection("tables").findOne({
-      _id: new ObjectId(tableId)
+      _id: new ObjectId(tableId),
     });
 
     if (!table) {
-      return NextResponse.json(
-        { error: "Table not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Table not found" }, { status: 404 });
     }
 
     // Fetch and sort table data
@@ -120,7 +114,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       success: true,
       data,
-      count: data.length
+      count: data.length,
     });
   } catch (error) {
     console.error("[Table Data API] Fetch error:", error);

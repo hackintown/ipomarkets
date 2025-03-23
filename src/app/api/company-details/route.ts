@@ -118,7 +118,7 @@ export async function GET(request: Request) {
     const companyId = searchParams.get("companyId");
 
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB_NAME || "create-table");
+    const db = client.db(process.env.MONGODB_DB_NAME || "ipomarketsdb");
 
     // If companyId is provided, fetch specific company details
     if (companyId) {
@@ -174,7 +174,7 @@ export async function POST(request: Request) {
     const validatedData = companyDetailsSchema.parse(data);
 
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB_NAME || "create-table");
+    const db = client.db(process.env.MONGODB_DB_NAME || "ipomarketsdb");
 
     // Check if company details already exist
     const existingDetails = await db.collection("company-details").findOne({
@@ -245,7 +245,7 @@ export async function PUT(request: Request) {
     }
 
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB_NAME || "create-table");
+    const db = client.db(process.env.MONGODB_DB_NAME || "ipomarketsdb");
 
     // Convert string _id to ObjectId
     const _id = new ObjectId(validatedData._id);
@@ -314,7 +314,7 @@ export async function DELETE(request: Request) {
     }
 
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB_NAME || "create-table");
+    const db = client.db(process.env.MONGODB_DB_NAME || "ipomarketsdb");
 
     const result = await db.collection("company-details").deleteOne({
       companyId: companyId,

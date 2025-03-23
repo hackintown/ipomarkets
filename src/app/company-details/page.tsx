@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import {
   ArrowUp,
   ArrowDown,
@@ -18,18 +18,31 @@ import {
   Bookmark,
   AlertCircle,
   TrendingUp,
-} from "lucide-react"
+} from "lucide-react";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/Button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert"
-import type { CompanyData } from "@/app/company-details/types"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/Button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/Card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/Table";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
 
-export default function CompanyDetailsPage({ data }: { data: CompanyData | null }) {
+export default function CompanyDetailsPage() {
   // For demo purposes, using the provided data directly
   // In a real application, this would come from props or API call
   const company = {
@@ -143,7 +156,8 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
     ],
     news: [
       {
-        title: "Mobikwik, IKS, Ola, Hexaware from IPO index tank up to 15%, record new lows",
+        title:
+          "Mobikwik, IKS, Ola, Hexaware from IPO index tank up to 15%, record new lows",
         url: "https://www.business-standard.com/markets/news/mobikwik-iks-ola-hexaware-from-ipo-index-tank-up-to-15-record-new-lows-125031700196_1.html",
         date: "2025-03-18",
         time: "17:38",
@@ -158,10 +172,7 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
     ],
     createdAt: "2025-03-18T12:05:25.232Z",
     updatedAt: "2025-03-18T12:05:25.232Z",
-  }
-
-  // Format description paragraphs
-  const descriptionParagraphs = company.basicInfo.description.split("\n\n")
+  };
 
   // Format content body paragraphs
   const formatContentBody = (body: string) => {
@@ -169,8 +180,8 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
       <p key={index} className="mb-4 last:mb-0">
         {paragraph}
       </p>
-    ))
-  }
+    ));
+  };
 
   // Stock price data (mock data for demonstration)
   const [stockPrice] = useState({
@@ -188,7 +199,7 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
     weekLow: 708.0,
     weekLowDate: "Feb 19, 2025",
     lastUpdated: "Mar 18, 2025 4:00 PM",
-  })
+  });
 
   // IPO timeline data (mock data for demonstration)
   const ipoTimeline = [
@@ -198,7 +209,7 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
     { event: "Initiation of Refunds", date: "February 18, 2025" },
     { event: "Credit of Shares to Demat", date: "February 18, 2025" },
     { event: "Listing Date", date: "February 19, 2025" },
-  ]
+  ];
 
   // IPO lot size data (mock data for demonstration)
   const ipoLotSize = [
@@ -229,7 +240,7 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
       minAmount: "₹10,11,024",
       maxAmount: "No Limit",
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -239,7 +250,10 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center">
               <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-                {company.companyName} <span className="text-gray-500 dark:text-gray-400 text-lg">IPO</span>
+                {company.companyName}{" "}
+                <span className="text-gray-500 dark:text-gray-400 text-lg">
+                  IPO
+                </span>
               </h1>
               <Badge
                 variant="outline"
@@ -270,15 +284,23 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-            <Link href="#" className="hover:text-primary dark:hover:text-primary">
+            <Link
+              href="#"
+              className="hover:text-primary dark:hover:text-primary"
+            >
               IPO Dashboard
             </Link>
             <ChevronRight className="h-4 w-4 mx-1" />
-            <Link href="#" className="hover:text-primary dark:hover:text-primary">
+            <Link
+              href="#"
+              className="hover:text-primary dark:hover:text-primary"
+            >
               MainBoard IPO List
             </Link>
             <ChevronRight className="h-4 w-4 mx-1" />
-            <span className="text-gray-900 dark:text-white font-medium">Company Details</span>
+            <span className="text-gray-900 dark:text-white font-medium">
+              Company Details
+            </span>
           </div>
         </div>
       </div>
@@ -318,7 +340,6 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
               >
                 Documents
               </TabsTrigger>
-
             </TabsList>
           </div>
 
@@ -343,16 +364,21 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                             />
                           ) : (
                             <h2 className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                              {company.companyName.substring(0, 3).toUpperCase()}
+                              {company.companyName
+                                .substring(0, 3)
+                                .toUpperCase()}
                             </h2>
                           )}
                         </div>
                       </div>
                       <div className="space-y-4">
                         <div>
-                          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{company.companyName}</h2>
+                          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                            {company.companyName}
+                          </h2>
                           <p className="text-gray-500 dark:text-gray-400">
-                            {company.basicInfo.industry} • Est. {company.basicInfo.founded}
+                            {company.basicInfo.industry} • Est.{" "}
+                            {company.basicInfo.founded}
                           </p>
                         </div>
 
@@ -399,20 +425,38 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                 {/* Stock Price Card */}
                 <Card>
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-xl">Current Stock Price</CardTitle>
-                    <CardDescription>Last updated: {stockPrice.lastUpdated}</CardDescription>
+                    <CardTitle className="text-xl">
+                      Current Stock Price
+                    </CardTitle>
+                    <CardDescription>
+                      Last updated: {stockPrice.lastUpdated}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
                       <div>
                         <div className="flex items-center">
-                          <h3 className="text-3xl font-bold">₹{stockPrice.current.toFixed(2)}</h3>
+                          <h3 className="text-3xl font-bold">
+                            ₹{stockPrice.current.toFixed(2)}
+                          </h3>
                           <div
-                            className={`flex items-center ml-3 ${stockPrice.isUp ? "text-green-600 dark:text-green-500" : "text-red-600 dark:text-red-500"}`}
+                            className={`flex items-center ml-3 ${
+                              stockPrice.isUp
+                                ? "text-green-600 dark:text-green-500"
+                                : "text-red-600 dark:text-red-500"
+                            }`}
                           >
-                            {stockPrice.isUp ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
-                            <span className="font-medium">{stockPrice.change.toFixed(2)}</span>
-                            <span className="ml-1">({stockPrice.changePercent.toFixed(2)}%)</span>
+                            {stockPrice.isUp ? (
+                              <ArrowUp className="h-4 w-4" />
+                            ) : (
+                              <ArrowDown className="h-4 w-4" />
+                            )}
+                            <span className="font-medium">
+                              {stockPrice.change.toFixed(2)}
+                            </span>
+                            <span className="ml-1">
+                              ({stockPrice.changePercent.toFixed(2)}%)
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -424,42 +468,65 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                               : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
                           }
                         >
-                          {stockPrice.isUp ? "Outperforming Market" : "Underperforming Market"}
+                          {stockPrice.isUp
+                            ? "Outperforming Market"
+                            : "Underperforming Market"}
                         </Badge>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                       <div className="space-y-1">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Open</p>
-                        <p className="font-medium">₹{stockPrice.open.toFixed(2)}</p>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Previous Close</p>
-                        <p className="font-medium">₹{stockPrice.previousClose.toFixed(2)}</p>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Day Range</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Open
+                        </p>
                         <p className="font-medium">
-                          ₹{stockPrice.low.toFixed(2)} - ₹{stockPrice.high.toFixed(2)}
+                          ₹{stockPrice.open.toFixed(2)}
                         </p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">52-Week High</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Previous Close
+                        </p>
+                        <p className="font-medium">
+                          ₹{stockPrice.previousClose.toFixed(2)}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Day Range
+                        </p>
+                        <p className="font-medium">
+                          ₹{stockPrice.low.toFixed(2)} - ₹
+                          {stockPrice.high.toFixed(2)}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          52-Week High
+                        </p>
                         <p className="font-medium">
                           ₹{stockPrice.weekHigh.toFixed(2)}{" "}
-                          <span className="text-xs text-gray-500">({stockPrice.weekHighDate})</span>
+                          <span className="text-xs text-gray-500">
+                            ({stockPrice.weekHighDate})
+                          </span>
                         </p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">52-Week Low</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          52-Week Low
+                        </p>
                         <p className="font-medium">
                           ₹{stockPrice.weekLow.toFixed(2)}{" "}
-                          <span className="text-xs text-gray-500">({stockPrice.weekLowDate})</span>
+                          <span className="text-xs text-gray-500">
+                            ({stockPrice.weekLowDate})
+                          </span>
                         </p>
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Total Traded Value</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Total Traded Value
+                        </p>
                         <p className="font-medium">₹{stockPrice.tradedValue}</p>
                       </div>
                     </div>
@@ -468,7 +535,9 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                     <div className="bg-gray-100 dark:bg-gray-700 rounded-lg h-64 flex items-center justify-center">
                       <div className="text-center">
                         <BarChart2 className="h-10 w-10 mx-auto text-gray-400 dark:text-gray-500 mb-2" />
-                        <p className="text-gray-500 dark:text-gray-400">Stock price chart will appear here</p>
+                        <p className="text-gray-500 dark:text-gray-400">
+                          Stock price chart will appear here
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -492,8 +561,12 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                   <CardContent className="space-y-4">
                     {company.content?.map((contentItem, index) => (
                       <div key={index} className="space-y-3">
-                        <h3 className="text-lg font-semibold">{contentItem.title}</h3>
-                        <div className="text-gray-700 dark:text-gray-300">{formatContentBody(contentItem.body)}</div>
+                        <h3 className="text-lg font-semibold">
+                          {contentItem.title}
+                        </h3>
+                        <div className="text-gray-700 dark:text-gray-300">
+                          {formatContentBody(contentItem.body)}
+                        </div>
                       </div>
                     ))}
                   </CardContent>
@@ -512,7 +585,11 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                             key={index}
                             className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0 last:pb-0"
                           >
-                            <Link href={newsItem.url} target="_blank" rel="noopener noreferrer">
+                            <Link
+                              href={newsItem.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               <h3 className="text-lg font-semibold hover:text-primary transition-colors">
                                 {newsItem.title}
                               </h3>
@@ -523,7 +600,9 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                                 {newsItem.date} • {newsItem.time}
                               </span>
                             </div>
-                            <p className="text-gray-700 dark:text-gray-300">{newsItem.description}</p>
+                            <p className="text-gray-700 dark:text-gray-300">
+                              {newsItem.description}
+                            </p>
                             <Link
                               href={newsItem.url}
                               target="_blank"
@@ -539,7 +618,9 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                     ) : (
                       <div className="text-center py-6">
                         <Info className="h-10 w-10 mx-auto text-gray-400 dark:text-gray-500 mb-2" />
-                        <p className="text-gray-500 dark:text-gray-400">No news available at this time</p>
+                        <p className="text-gray-500 dark:text-gray-400">
+                          No news available at this time
+                        </p>
                       </div>
                     )}
                   </CardContent>
@@ -561,27 +642,47 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Industry</p>
-                        <p className="font-medium">{company.basicInfo.industry}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Industry
+                        </p>
+                        <p className="font-medium">
+                          {company.basicInfo.industry}
+                        </p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Founded</p>
-                        <p className="font-medium">{company.basicInfo.founded}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Founded
+                        </p>
+                        <p className="font-medium">
+                          {company.basicInfo.founded}
+                        </p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Headquarters</p>
-                        <p className="font-medium">{company.basicInfo.headquarters}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Headquarters
+                        </p>
+                        <p className="font-medium">
+                          {company.basicInfo.headquarters}
+                        </p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">CEO</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          CEO
+                        </p>
                         <p className="font-medium">{company.basicInfo.ceo}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Employees</p>
-                        <p className="font-medium">{company.basicInfo.employees}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          Employees
+                        </p>
+                        <p className="font-medium">
+                          {company.basicInfo.employees}
+                        </p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">IPO Date</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          IPO Date
+                        </p>
                         <p className="font-medium">Feb 19, 2025</p>
                       </div>
                     </div>
@@ -591,7 +692,9 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                     <div>
                       <h4 className="font-medium mb-2">IPO Price Band</h4>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500 dark:text-gray-400">Price per share</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          Price per share
+                        </span>
                         <span className="font-semibold">₹708</span>
                       </div>
                     </div>
@@ -602,19 +705,27 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                       <h4 className="font-medium mb-2">Issue Details</h4>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500 dark:text-gray-400">Issue Size</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                            Issue Size
+                          </span>
                           <span className="font-semibold">₹8,750 Cr</span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500 dark:text-gray-400">Fresh Issue</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                            Fresh Issue
+                          </span>
                           <span className="font-semibold">₹0 Cr</span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500 dark:text-gray-400">Offer for Sale</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                            Offer for Sale
+                          </span>
                           <span className="font-semibold">₹8,750 Cr</span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-500 dark:text-gray-400">Face Value</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                            Face Value
+                          </span>
                           <span className="font-semibold">₹2</span>
                         </div>
                       </div>
@@ -630,8 +741,13 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                   <CardContent>
                     <div className="space-y-3">
                       {ipoTimeline.map((item, index) => (
-                        <div key={index} className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 dark:text-gray-400">{item.event}</span>
+                        <div
+                          key={index}
+                          className="flex justify-between items-center"
+                        >
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            {item.event}
+                          </span>
                           <span className="font-medium">{item.date}</span>
                         </div>
                       ))}
@@ -645,7 +761,8 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                     <CardTitle>Analyst Recommendations</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {company.reviews?.length > 0 && company.reviews[0].tableData ? (
+                    {company.reviews?.length > 0 &&
+                    company.reviews[0].tableData ? (
                       <div className="space-y-4">
                         <Table>
                           <TableHeader>
@@ -658,7 +775,9 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                           <TableBody>
                             {company.reviews[0].tableData.map((row, index) => (
                               <TableRow key={index}>
-                                <TableCell className="font-medium">{row.Reviewer}</TableCell>
+                                <TableCell className="font-medium">
+                                  {row.Reviewer}
+                                </TableCell>
                                 <TableCell>
                                   <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
                                     {row.Recommendation}
@@ -676,9 +795,11 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                             <AlertTitle>Disclaimer</AlertTitle>
                             <AlertDescription>
                               <ul className="list-disc pl-5 text-sm space-y-1 mt-2">
-                                {company.reviews[0].listItems.map((item, index) => (
-                                  <li key={index}>{item}</li>
-                                ))}
+                                {company.reviews[0].listItems.map(
+                                  (item, index) => (
+                                    <li key={index}>{item}</li>
+                                  )
+                                )}
                               </ul>
                             </AlertDescription>
                           </Alert>
@@ -687,7 +808,9 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                     ) : (
                       <div className="text-center py-6">
                         <Info className="h-10 w-10 mx-auto text-gray-400 dark:text-gray-500 mb-2" />
-                        <p className="text-gray-500 dark:text-gray-400">No analyst recommendations available</p>
+                        <p className="text-gray-500 dark:text-gray-400">
+                          No analyst recommendations available
+                        </p>
                       </div>
                     )}
                   </CardContent>
@@ -700,19 +823,31 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      <Button variant="outline" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
                         <FileText className="h-4 w-4 mr-2" />
                         Red Herring Prospectus (RHP)
                       </Button>
-                      <Button variant="outline" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
                         <FileText className="h-4 w-4 mr-2" />
                         Draft Red Herring Prospectus (DRHP)
                       </Button>
-                      <Button variant="outline" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
                         <FileText className="h-4 w-4 mr-2" />
                         Annual Report 2024
                       </Button>
-                      <Button variant="outline" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
                         <FileText className="h-4 w-4 mr-2" />
                         Investor Presentation
                       </Button>
@@ -734,7 +869,9 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                   <CardContent>
                     <div className="space-y-6">
                       <div>
-                        <h3 className="text-lg font-semibold mb-3">Issue Structure</h3>
+                        <h3 className="text-lg font-semibold mb-3">
+                          Issue Structure
+                        </h3>
                         <Table>
                           <TableHeader>
                             <TableRow>
@@ -747,9 +884,13 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                             {company.tables &&
                               company.tables[0]?.data.map((row, index) => (
                                 <TableRow key={index}>
-                                  <TableCell className="font-medium">{row["Investor Category"]}</TableCell>
+                                  <TableCell className="font-medium">
+                                    {row["Investor Category"]}
+                                  </TableCell>
                                   <TableCell>{row["Shares Offered"]}</TableCell>
-                                  <TableCell>{row["Maximum Allottees"]}</TableCell>
+                                  <TableCell>
+                                    {row["Maximum Allottees"]}
+                                  </TableCell>
                                 </TableRow>
                               ))}
                           </TableBody>
@@ -759,10 +900,14 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                       <Separator />
 
                       <div>
-                        <h3 className="text-lg font-semibold mb-3">IPO Lot Size</h3>
+                        <h3 className="text-lg font-semibold mb-3">
+                          IPO Lot Size
+                        </h3>
                         <p className="text-gray-700 dark:text-gray-300 mb-4">
-                          Investors can bid for a minimum of 21 shares and in multiples thereof. The below table depicts
-                          the minimum and maximum investment by retail investors and HNI in terms of shares and amount.
+                          Investors can bid for a minimum of 21 shares and in
+                          multiples thereof. The below table depicts the minimum
+                          and maximum investment by retail investors and HNI in
+                          terms of shares and amount.
                         </p>
                         <Table>
                           <TableHeader>
@@ -779,7 +924,9 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                           <TableBody>
                             {ipoLotSize.map((row, index) => (
                               <TableRow key={index}>
-                                <TableCell className="font-medium">{row.category}</TableCell>
+                                <TableCell className="font-medium">
+                                  {row.category}
+                                </TableCell>
                                 <TableCell>{row.minLots}</TableCell>
                                 <TableCell>{row.maxLots}</TableCell>
                                 <TableCell>{row.minShares}</TableCell>
@@ -795,27 +942,49 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                       <Separator />
 
                       <div>
-                        <h3 className="text-lg font-semibold mb-3">Book Running Lead Managers</h3>
+                        <h3 className="text-lg font-semibold mb-3">
+                          Book Running Lead Managers
+                        </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="border rounded-lg p-4">
-                            <h4 className="font-medium mb-1">Kotak Mahindra Capital Company Limited</h4>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Lead Manager</p>
+                            <h4 className="font-medium mb-1">
+                              Kotak Mahindra Capital Company Limited
+                            </h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              Lead Manager
+                            </p>
                           </div>
                           <div className="border rounded-lg p-4">
-                            <h4 className="font-medium mb-1">Citigroup Global Markets India Private Limited</h4>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Lead Manager</p>
+                            <h4 className="font-medium mb-1">
+                              Citigroup Global Markets India Private Limited
+                            </h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              Lead Manager
+                            </p>
                           </div>
                           <div className="border rounded-lg p-4">
-                            <h4 className="font-medium mb-1">J.P. Morgan India Private Limited</h4>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Lead Manager</p>
+                            <h4 className="font-medium mb-1">
+                              J.P. Morgan India Private Limited
+                            </h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              Lead Manager
+                            </p>
                           </div>
                           <div className="border rounded-lg p-4">
-                            <h4 className="font-medium mb-1">HSBC Securities & Capital Markets Pvt Ltd</h4>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Lead Manager</p>
+                            <h4 className="font-medium mb-1">
+                              HSBC Securities & Capital Markets Pvt Ltd
+                            </h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              Lead Manager
+                            </p>
                           </div>
                           <div className="border rounded-lg p-4">
-                            <h4 className="font-medium mb-1">IIFL Securities Ltd</h4>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Lead Manager</p>
+                            <h4 className="font-medium mb-1">
+                              IIFL Securities Ltd
+                            </h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              Lead Manager
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -823,10 +992,16 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                       <Separator />
 
                       <div>
-                        <h3 className="text-lg font-semibold mb-3">Registrar</h3>
+                        <h3 className="text-lg font-semibold mb-3">
+                          Registrar
+                        </h3>
                         <div className="border rounded-lg p-4">
-                          <h4 className="font-medium mb-1">Kfin Technologies Limited</h4>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">Registrar to the Issue</p>
+                          <h4 className="font-medium mb-1">
+                            Kfin Technologies Limited
+                          </h4>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Registrar to the Issue
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -842,8 +1017,13 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                   <CardContent>
                     <div className="space-y-3">
                       {ipoTimeline.map((item, index) => (
-                        <div key={index} className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600 dark:text-gray-400">{item.event}</span>
+                        <div
+                          key={index}
+                          className="flex justify-between items-center"
+                        >
+                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                            {item.event}
+                          </span>
                           <span className="font-medium">{item.date}</span>
                         </div>
                       ))}
@@ -854,35 +1034,52 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                 <Card>
                   <CardHeader>
                     <CardTitle>IPO Subscription Status</CardTitle>
-                    <CardDescription>As of closing date (Feb 14, 2025)</CardDescription>
+                    <CardDescription>
+                      As of closing date (Feb 14, 2025)
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div>
                         <div className="flex justify-between mb-1">
-                          <span className="text-sm">Qualified Institutional Buyers (QIBs)</span>
+                          <span className="text-sm">
+                            Qualified Institutional Buyers (QIBs)
+                          </span>
                           <span className="font-medium">7.85x</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "78.5%" }}></div>
+                          <div
+                            className="bg-blue-600 h-2.5 rounded-full"
+                            style={{ width: "78.5%" }}
+                          ></div>
                         </div>
                       </div>
                       <div>
                         <div className="flex justify-between mb-1">
-                          <span className="text-sm">Non-Institutional Investors (NIIs)</span>
+                          <span className="text-sm">
+                            Non-Institutional Investors (NIIs)
+                          </span>
                           <span className="font-medium">3.42x</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "34.2%" }}></div>
+                          <div
+                            className="bg-blue-600 h-2.5 rounded-full"
+                            style={{ width: "34.2%" }}
+                          ></div>
                         </div>
                       </div>
                       <div>
                         <div className="flex justify-between mb-1">
-                          <span className="text-sm">Retail Individual Investors (RIIs)</span>
+                          <span className="text-sm">
+                            Retail Individual Investors (RIIs)
+                          </span>
                           <span className="font-medium">1.28x</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "12.8%" }}></div>
+                          <div
+                            className="bg-blue-600 h-2.5 rounded-full"
+                            style={{ width: "12.8%" }}
+                          ></div>
                         </div>
                       </div>
                       <div>
@@ -891,7 +1088,10 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                           <span className="font-medium">2.15x</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "21.5%" }}></div>
+                          <div
+                            className="bg-blue-600 h-2.5 rounded-full"
+                            style={{ width: "21.5%" }}
+                          ></div>
                         </div>
                       </div>
                       <div>
@@ -900,7 +1100,10 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
                           <span className="font-medium">4.75x</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "47.5%" }}></div>
+                          <div
+                            className="bg-blue-600 h-2.5 rounded-full"
+                            style={{ width: "47.5%" }}
+                          ></div>
                         </div>
                       </div>
                     </div>
@@ -914,8 +1117,12 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
           <TabsContent value="financials" className="mt-6">
             <div className="py-12 text-center">
               <DollarSign className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500" />
-              <h3 className="mt-4 text-lg font-medium">Financial Information</h3>
-              <p className="mt-2 text-gray-500 dark:text-gray-400">Detailed financial information will appear here.</p>
+              <h3 className="mt-4 text-lg font-medium">
+                Financial Information
+              </h3>
+              <p className="mt-2 text-gray-500 dark:text-gray-400">
+                Detailed financial information will appear here.
+              </p>
             </div>
           </TabsContent>
 
@@ -923,7 +1130,9 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
             <div className="py-12 text-center">
               <BarChart2 className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500" />
               <h3 className="mt-4 text-lg font-medium">Reviews</h3>
-              <p className="mt-2 text-gray-500 dark:text-gray-400">Expert analysis and reports will appear here.</p>
+              <p className="mt-2 text-gray-500 dark:text-gray-400">
+                Expert analysis and reports will appear here.
+              </p>
             </div>
           </TabsContent>
 
@@ -941,7 +1150,9 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
             <div className="py-12 text-center">
               <FileText className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500" />
               <h3 className="mt-4 text-lg font-medium">Documents</h3>
-              <p className="mt-2 text-gray-500 dark:text-gray-400">Company documents and filings will appear here.</p>
+              <p className="mt-2 text-gray-500 dark:text-gray-400">
+                Company documents and filings will appear here.
+              </p>
             </div>
           </TabsContent>
 
@@ -949,7 +1160,9 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
             <div className="py-12 text-center">
               <MessageSquare className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500" />
               <h3 className="mt-4 text-lg font-medium">Discussion Forum</h3>
-              <p className="mt-2 text-gray-500 dark:text-gray-400">Join the discussion about this company.</p>
+              <p className="mt-2 text-gray-500 dark:text-gray-400">
+                Join the discussion about this company.
+              </p>
             </div>
           </TabsContent>
         </Tabs>
@@ -961,7 +1174,8 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                &copy; {new Date().getFullYear()} IPO Information Portal. All rights reserved.
+                &copy; {new Date().getFullYear()} IPO Information Portal. All
+                rights reserved.
               </p>
             </div>
             <div className="flex space-x-6">
@@ -988,6 +1202,5 @@ export default function CompanyDetailsPage({ data }: { data: CompanyData | null 
         </div>
       </footer>
     </div>
-  )
+  );
 }
-

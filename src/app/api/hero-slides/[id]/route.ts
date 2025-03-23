@@ -47,7 +47,7 @@ export async function GET(
     }
 
     const client = await clientPromise;
-    const db = client.db("ipomarketdb");
+    const db = client.db("ipomarketsdb");
 
     const slide = await db.collection("hero-slides").findOne({
       _id: new ObjectId(id),
@@ -88,7 +88,7 @@ export async function PUT(
     }
 
     const client = await clientPromise;
-    const db = client.db("ipomarketdb");
+    const db = client.db("ipomarketsdb");
 
     // Parse and validate request body
     const data = await request.json();
@@ -170,7 +170,7 @@ export async function DELETE(
     }
 
     const client = await clientPromise;
-    const db = client.db("ipomarketdb");
+    const db = client.db("ipomarketsdb");
 
     const result = await db.collection("hero-slides").deleteOne({
       _id: new ObjectId(id),

@@ -1,11 +1,20 @@
+import BlogSection from "@/components/Home/BlogSection";
 import Hero from "@/components/Home/Hero/Hero";
 import IPOListing from "@/components/IPO/IPOListing";
-export default function Home() {
-
+import { getBlogPosts } from "@/lib/blog/api";
+import { BlogPost } from "@/lib/blog/type";
+export default async function Home() {
+  let blogPosts: BlogPost[] = [];
+  try {
+    blogPosts = await getBlogPosts();
+  } catch (error) {
+    console.error("Failed to fetch blog posts:", error);
+  }
   return (
     <section>
       <Hero />
-      <IPOListing />  
+      <IPOListing />
+      <BlogSection posts={blogPosts} />
     </section>
   );
 }

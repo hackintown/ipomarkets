@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { AlertCircle, CheckCircle2, Info, XCircle } from "lucide-react"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { AlertCircle, CheckCircle2, Info, XCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const alertVariants = cva(
   "relative w-full rounded-lg border px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground [&>div]:pl-7",
@@ -17,15 +17,14 @@ const alertVariants = cva(
           "border-green-500/50 text-green-600 dark:text-green-400 [&>svg]:text-green-600 dark:border-green-500 dark:[&>svg]:text-green-400",
         warning:
           "border-yellow-500/50 text-yellow-600 dark:text-yellow-400 [&>svg]:text-yellow-600 dark:border-yellow-500 dark:[&>svg]:text-yellow-400",
-        info:
-          "border-blue-500/50 text-blue-600 dark:text-blue-400 [&>svg]:text-blue-600 dark:border-blue-500 dark:[&>svg]:text-blue-400",
+        info: "border-blue-500/50 text-blue-600 dark:text-blue-400 [&>svg]:text-blue-600 dark:border-blue-500 dark:[&>svg]:text-blue-400",
       },
     },
     defaultVariants: {
       variant: "default",
     },
   }
-)
+);
 
 const iconMap = {
   default: AlertCircle,
@@ -33,17 +32,18 @@ const iconMap = {
   success: CheckCircle2,
   warning: AlertCircle,
   info: Info,
-}
+};
 
 interface AlertProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof alertVariants> {
-  icon?: React.ReactNode
+  icon?: React.ElementType;
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
   ({ className, variant = "default", icon, children, ...props }, ref) => {
-    const Icon = icon || (iconMap[variant || "default"])
+    const IconComponent =
+      icon || (iconMap[variant || "default"] as React.ElementType);
 
     return (
       <div
@@ -52,13 +52,13 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         className={cn(alertVariants({ variant }), className)}
         {...props}
       >
-        <Icon className="h-4 w-4" />
+        <IconComponent className="h-4 w-4" />
         <div>{children}</div>
       </div>
-    )
+    );
   }
-)
-Alert.displayName = "Alert"
+);
+Alert.displayName = "Alert";
 
 const AlertTitle = React.forwardRef<
   HTMLParagraphElement,
@@ -71,8 +71,8 @@ const AlertTitle = React.forwardRef<
   >
     {children}
   </h5>
-))
-AlertTitle.displayName = "AlertTitle"
+));
+AlertTitle.displayName = "AlertTitle";
 
 const AlertDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -85,7 +85,7 @@ const AlertDescription = React.forwardRef<
   >
     {children}
   </div>
-))
-AlertDescription.displayName = "AlertDescription"
+));
+AlertDescription.displayName = "AlertDescription";
 
-export { Alert, AlertTitle, AlertDescription, alertVariants } 
+export { Alert, AlertTitle, AlertDescription, alertVariants };

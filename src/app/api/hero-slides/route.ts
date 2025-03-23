@@ -44,7 +44,7 @@ type SlideData = z.infer<typeof slideSchema>;
 export async function GET() {
   try {
     const client = await clientPromise;
-    const db = client.db("ipomarketdb");
+    const db = client.db("ipomarketsdb");
 
     const slides = await db
       .collection("hero-slides")
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
     const validatedData: SlideData = slideSchema.parse(data);
 
     const client = await clientPromise;
-    const db = client.db("ipomarketdb");
+    const db = client.db("ipomarketsdb");
 
     // Add timestamps
     const slideWithTimestamps = {

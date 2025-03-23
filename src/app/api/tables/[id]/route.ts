@@ -65,7 +65,7 @@ export async function PUT(
     const validatedData = tableSchema.parse(data);
 
     const client = await clientPromise;
-    const db = client.db("create-table");
+    const db = client.db("ipomarketsdb");
 
     const tableData = {
       ...validatedData,
@@ -119,7 +119,7 @@ export async function GET(
     }
 
     const client = await clientPromise;
-    const db = client.db("create-table");
+    const db = client.db("ipomarketsdb");
 
     const table = await db.collection("tables").findOne({
       _id: new ObjectId(id),
@@ -154,7 +154,7 @@ export async function DELETE(
     }
 
     const client = await clientPromise;
-    const db = client.db("create-table");
+    const db = client.db("ipomarketsdb");
 
     const result = await db.collection("tables").deleteOne({
       _id: new ObjectId(id),

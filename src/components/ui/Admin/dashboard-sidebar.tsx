@@ -17,6 +17,7 @@ import {
   LifeBuoy,
   Package,
   TableProperties,
+  Book,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -183,6 +184,12 @@ export function DashboardSidebar() {
               href="/admin/dashboard/company-details"
               icon={Building2}
               isActive={pathname.startsWith("/admin/dashboard/company-details")}
+            />
+            <NavItem
+              title="Blog CMS"
+              href="/admin/dashboard/blogcms"
+              icon={Book}
+              isActive={pathname.startsWith("/admin/dashboard/blogcms")}
             />
           </ul>
           <div className="my-2 border-t" />

@@ -133,7 +133,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         // Default (or custom) Framer Motion animations
         whileHover={whileHover ?? { scale: 1.03 }}
         whileTap={whileTap ?? { scale: 0.97 }}
-        transition={transition ?? { type: "spring", stiffness: 300, damping: 20 }}
+        transition={
+          transition ?? { type: "spring", stiffness: 300, damping: 20 }
+        }
         initial={initial}
         animate={animate}
         exit={exit}

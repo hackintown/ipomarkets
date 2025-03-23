@@ -26,7 +26,7 @@ export async function GET(
 
     // Connect to MongoDB
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB_NAME || "create-table");
+    const db = client.db(process.env.MONGODB_DB_NAME || "ipomarketsdb");
 
     // Query for company details with projection to exclude unnecessary fields if needed
     const companyDetails = await db.collection("company-details").findOne(
@@ -87,7 +87,7 @@ export async function DELETE(
 
     // Connect to MongoDB
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB_NAME || "create-table");
+    const db = client.db(process.env.MONGODB_DB_NAME || "ipomarketsdb");
 
     // Attempt to delete the document
     const result = await db.collection("company-details").deleteOne({
@@ -157,7 +157,7 @@ export async function PUT(
 
     // Connect to MongoDB
     const client = await clientPromise;
-    const db = client.db(process.env.MONGODB_DB_NAME || "create-table");
+    const db = client.db(process.env.MONGODB_DB_NAME || "ipomarketsdb");
 
     // Remove _id from update data if present to avoid MongoDB errors
     if (updatedData._id) {

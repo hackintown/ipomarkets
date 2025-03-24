@@ -32,7 +32,7 @@ export default function Navbar() {
     <motion.header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 w-full backdrop-blur-sm",
-        isScrolled ? "bg-background/80 shadow-sm" : "bg-background",
+        isScrolled ? "bg-background shadow-sm" : "bg-background",
         "py-1"
       )}
       initial={{ y: -100 }}

@@ -39,15 +39,16 @@
 @tailwind utilities;
 
 /* =======================================
-      LIGHT MODE (DEFAULT)
-      ======================================= */
+         LIGHT MODE (DEFAULT)
+         ======================================= */
 :root {
   /* BRAND COLORS */
   /* #00913e (brand green) in HSL -> hsl(145, 100%, 28%) */
-  --primary: 145, 100%, 28%;
+  --primary: 145, 100%, 35%;
+  /* Slightly lighter green for better contrast */
   --primary-foreground: 0, 0%, 100%;
 
-  /* #2a2e31 (brand dark) in HSL -> hsl(210, 7%, 24%) */
+  /* #2a2e31 (brand dark gray) in HSL -> hsl(210, 7%, 24%) */
   --secondary: 210, 7%, 24%;
   --secondary-foreground: 0, 0%, 100%;
 
@@ -56,7 +57,8 @@
 
   /* BACKGROUND & FOREGROUND */
   --background: 210, 16%, 98%;
-  --foreground: 210, 16%, 10%;
+  --foreground: 210, 7%, 24%;
+  /* Match logo's dark gray for consistency */
 
   --card: 210, 16%, 96%;
   --card-foreground: 210, 16%, 15%;
@@ -64,9 +66,8 @@
   --popover: 210, 16%, 94%;
   --popover-foreground: 210, 16%, 15%;
 
-  /* Tertiary or additional accent */
+  /* Tertiary or additional accent (muted gold for premium feel) */
   --tertiary: 44, 90%, 57%;
-  /* A gold-like hue */
   --tertiary-foreground: 0, 0%, 15%;
 
   /* MUTED & OTHER NEUTRALS */
@@ -74,8 +75,8 @@
   --muted-foreground: 210, 16%, 30%;
 
   /* ACCENTS & ALERTS */
-  --accent: 200, 85%, 50%;
-  /* Vibrant blue accent */
+  --accent: 44, 90%, 57%;
+  /* Replaced vibrant blue with muted gold */
   --accent-foreground: 0, 0%, 100%;
 
   --success: 142, 76%, 40%;
@@ -97,7 +98,8 @@
   /* BORDERS & FORMS */
   --border: 210, 16%, 80%;
   --input: 210, 16%, 100%;
-  --ring: 145, 100%, 28%;
+  --ring: 145, 100%, 35%;
+  /* Match primary green for focus states */
   --radius: 0.5rem;
   --shadow: 210, 16%, 70%;
 
@@ -106,29 +108,36 @@
 }
 
 /* =======================================
-      DARK MODE OVERRIDES
-      ======================================= */
+         DARK MODE OVERRIDES
+         ======================================= */
 .dark {
-  --background: 210, 8%, 10%;
-  --foreground: 210, 16%, 92%;
+  --background: 210, 8%, 15%;
+  /* Slightly lighter for better contrast */
+  --foreground: 210, 16%, 85%;
+  /* Softer off-white for harmony */
 
-  --card: 210, 8%, 14%;
-  --card-foreground: 210, 16%, 92%;
+  --card: 210, 8%, 20%;
+  --card-foreground: 210, 16%, 85%;
 
-  --popover: 210, 8%, 12%;
-  --popover-foreground: 210, 16%, 92%;
+  --popover: 210, 8%, 18%;
+  --popover-foreground: 210, 16%, 85%;
 
   --tertiary-foreground: 0, 0%, 100%;
 
-  --muted: 210, 8%, 20%;
+  --muted: 210, 8%, 25%;
   --muted-foreground: 210, 8%, 70%;
 
   --notice: 210, 8%, 18%;
   --notice-foreground: 210, 16%, 92%;
 
-  --border: 210, 8%, 30%;
-  --input: 210, 8%, 25%;
+  --border: 210, 8%, 35%;
+  --input: 210, 8%, 30%;
   --shadow: 210, 8%, 5%;
+
+  --primary: 145, 100%, 32%;
+  /* Slightly lighter green for vibrancy */
+  --secondary: 210, 7%, 30%;
+  /* Lighter dark gray for contrast */
 
   --font-family: "Inter", system-ui, sans-serif;
 }
@@ -151,14 +160,15 @@
 }
 
 /* =======================================
-      COMPONENT STYLES (EXAMPLE)
-      ======================================= */
+         COMPONENT STYLES (EXAMPLE)
+         ======================================= */
 @layer components {
 
   /* NAVBAR */
   .nav-container {
     @apply fixed w-full top-0 z-50 bg-background;
   }
+
   /* Navbar link style */
   .nav-link {
     @apply relative text-foreground/80 hover:text-foreground transition-colors duration-200;
@@ -180,8 +190,8 @@
 
   /* SUB-MENU (e.g., dropdown or mega-menu) */
   .sub-menu {
-    @apply absolute top-[4.2rem] p-4 rounded-xl z-50 border border-border/10;
-    @apply bg-background/95 backdrop-blur-xl shadow-lg shadow-foreground/10 dark:shadow-foreground/30;
+    @apply absolute top-[4.2rem] p-4 rounded-xl z-50 border border-border;
+    @apply bg-background backdrop-blur-xl shadow-lg shadow-foreground/10 dark:shadow-foreground/30;
     @apply origin-[50%_-170px];
   }
 
@@ -191,7 +201,6 @@
   }
 
   .sub-menu-item:hover {
-    /* Example subtle hover effect using gradient */
     background: linear-gradient(to right, hsl(var(--foreground)/0.07), transparent);
   }
 
@@ -222,6 +231,7 @@
     width: 6px;
     height: 18px;
     border-radius: 20%;
-    background: (var(--foreground));
+    background: hsl(var(--foreground));
+    /* Fixed syntax error */
   }
 }

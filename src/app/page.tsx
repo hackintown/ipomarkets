@@ -3,6 +3,7 @@ import Hero from "@/components/Home/Hero/Hero";
 import IPOListing from "@/components/IPO/IPOListing";
 import { getBlogPosts } from "@/lib/blog/api";
 import { BlogPost } from "@/lib/blog/type";
+import FAQ from "@/components/ui/FAQ";
 export default async function Home() {
   let blogPosts: BlogPost[] = [];
   try {
@@ -15,6 +16,7 @@ export default async function Home() {
       <Hero />
       <IPOListing />
       <BlogSection posts={blogPosts} />
+      <FAQ />
     </section>
   );
 }

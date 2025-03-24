@@ -54,14 +54,14 @@ export const NAVIGATION_MENUS = [
     name: "FAQs",
     href: "/faqs",
   },
-  {
-    name: "Polls",
-    href: "/polls",
-  },
-  {
-    name: "Community Forum",
-    href: "/community",
-  },
+  // {
+  //   name: "Polls",
+  //   href: "/polls",
+  // },
+  // {
+  //   name: "Community Forum",
+  //   href: "/community",
+  // },
 ] as const satisfies MenuItem[];
 
 export type NavigationMenu = (typeof NAVIGATION_MENUS)[number];

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { z } from "zod";
+import { NextRequest } from "next/server";
 
 // Custom refinement for ObjectId
 const objectIdSchema = z.string().refine(
@@ -111,10 +112,10 @@ const companyDetailsSchema = z.object({
     .default([]),
 });
 
-// GET endpoint to fetch all company details
-export async function GET(request: Request) {
+// GET endpoint to fetch all company details or a specific one by companyId
+export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL(req.url);
     const companyId = searchParams.get("companyId");
 
     const client = await clientPromise;
@@ -122,20 +123,13 @@ export async function GET(request: Request) {
 
     // If companyId is provided, fetch specific company details
     if (companyId) {
-      if (!ObjectId.isValid(companyId)) {
-        return NextResponse.json(
-          { error: "Invalid company ID format" },
-          { status: 400 }
-        );
-      }
-
       const companyDetails = await db.collection("company-details").findOne({
         companyId: companyId,
       });
 
       if (!companyDetails) {
         return NextResponse.json(
-          { error: "Company details not found" },
+          { success: false, error: "Company details not found" },
           { status: 404 }
         );
       }
@@ -147,21 +141,16 @@ export async function GET(request: Request) {
     }
 
     // Otherwise, fetch all company details
-    const companyDetails = await db
-      .collection("company-details")
-      .find()
-      .sort({ updatedAt: -1 })
-      .toArray();
+    const allCompanyDetails = await db.collection("company-details").find({}).toArray();
 
     return NextResponse.json({
       success: true,
-      data: companyDetails,
-      count: companyDetails.length,
+      companyDetails: allCompanyDetails,
     });
   } catch (error) {
-    console.error("[Company Details API] Fetch error:", error);
+    console.error("Error fetching company details:", error);
     return NextResponse.json(
-      { error: "Failed to fetch company details" },
+      { success: false, error: "Failed to fetch company details" },
       { status: 500 }
     );
   }

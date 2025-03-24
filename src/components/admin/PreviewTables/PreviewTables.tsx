@@ -19,6 +19,8 @@ import {
   Download,
   Loader2,
   Filter,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import {
@@ -30,6 +32,7 @@ import {
 } from "@/components/ui/Select";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/Sheet";
 import Loader from "@/components/ui/Loader";
+import Link from "next/link";
 
 // Types for table structure and data
 interface Column {
@@ -54,6 +57,8 @@ interface Table {
   description: string;
   columns: Column[];
   settings: TableSettings;
+  createdAt: Date;
+  updatedAt: Date;
 }
 interface TableRow {
   _id: string;
@@ -71,6 +76,11 @@ interface TableDataResponse {
   count: number;
 }
 
+// First, let's define an interface for company details
+interface CompanyDetail {
+  companyId: string;
+  _id: string;
+}
 
 export default function PreviewTables() {
   // State management
@@ -80,6 +90,7 @@ export default function PreviewTables() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [companyDetailsMap, setCompanyDetailsMap] = useState<Record<string, string>>({});
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: "asc" | "desc";
@@ -89,6 +100,7 @@ export default function PreviewTables() {
   // Fetch tables on component mount
   useEffect(() => {
     fetchTables();
+    fetchCompanyDetailsMapping();
   }, []);
 
   // Fetch table data when a table is selected
@@ -225,6 +237,38 @@ export default function PreviewTables() {
     a.click();
     window.URL.revokeObjectURL(url);
   };
+
+  // Add this function to fetch company details mapping
+  const fetchCompanyDetailsMapping = async () => {
+    try {
+      const response = await fetch('/api/company-details');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          const mapping: Record<string, string> = {};
+          data.companyDetails.forEach((detail: CompanyDetail) => {
+            mapping[detail.companyId] = detail._id;
+          });
+          setCompanyDetailsMap(mapping);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching company details mapping:", error);
+    }
+  };
+
+  // Calculate total pages
+  const totalPages = useMemo(() => {
+    if (
+      !selectedTable ||
+      !processedData.length ||
+      !selectedTable.settings.pagination
+    )
+      return 1;
+    return Math.ceil(
+      processedData.length / selectedTable.settings.itemsPerPage
+    );
+  }, [processedData, selectedTable]);
 
   if (isLoading) {
     return (
@@ -387,11 +431,27 @@ export default function PreviewTables() {
                 ) : (
                   paginatedData.map((row) => (
                     <TableRow key={row._id}>
-                      {selectedTable.columns.map((column) => (
-                        <TableCell key={column.name}>
-                          {formatCellValue(row[column.name], column.type)}
-                        </TableCell>
-                      ))}
+                      {selectedTable.columns.map((column, colIndex) => {
+                        // Check if this is the first column (usually company name) and if it has company details
+                        const isCompanyNameColumn = colIndex === 0;
+                        const hasCompanyDetails = isCompanyNameColumn && companyDetailsMap[row._id];
+                        const formattedValue = formatCellValue(row[column.name], column.type);
+                        
+                        return (
+                          <TableCell key={column.name}>
+                            {isCompanyNameColumn && hasCompanyDetails ? (
+                              <Link 
+                                href={`/admin/company/${companyDetailsMap[row._id]}`}
+                                className="text-primary hover:underline font-medium"
+                              >
+                                {formattedValue}
+                              </Link>
+                            ) : (
+                              formattedValue
+                            )}
+                          </TableCell>
+                        );
+                      })}
                     </TableRow>
                   ))
                 )}
@@ -403,17 +463,7 @@ export default function PreviewTables() {
           {selectedTable.settings.pagination && (
             <div className="border-t p-4 flex items-center justify-between">
               <div className="text-sm text-muted-foreground">
-                Showing{" "}
-                {Math.min(
-                  (currentPage - 1) * selectedTable.settings.itemsPerPage + 1,
-                  processedData.length
-                )}{" "}
-                to{" "}
-                {Math.min(
-                  currentPage * selectedTable.settings.itemsPerPage,
-                  processedData.length
-                )}{" "}
-                of {processedData.length} entries
+                Page {currentPage} of {totalPages}
               </div>
               <div className="flex gap-2">
                 <Button
@@ -422,7 +472,7 @@ export default function PreviewTables() {
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage(currentPage - 1)}
                 >
-                  Previous
+                  <ChevronLeft className="h-4 w-4" />
                 </Button>
                 <Button
                   variant="outline"
@@ -435,7 +485,7 @@ export default function PreviewTables() {
                   }
                   onClick={() => setCurrentPage(currentPage + 1)}
                 >
-                  Next
+                  <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -467,5 +517,3 @@ function formatCellValue(value: string | number | boolean | Date | undefined | n
       return String(value);
   }
 }
-
-

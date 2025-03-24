@@ -29,11 +29,9 @@ export async function GET(
     const db = client.db(process.env.MONGODB_DB_NAME || "ipomarketsdb");
 
     // Query for company details with projection to exclude unnecessary fields if needed
-    const companyDetails = await db.collection("company-details").findOne(
-      { _id: new ObjectId(id) }
-      // Add projection here if you want to limit returned fields
-      // { projection: { field1: 1, field2: 1 } }
-    );
+      const companyDetails = await db.collection("company-details").findOne({
+      _id: new ObjectId(id),
+    });
 
     // Handle case when no company is found
     if (!companyDetails) {

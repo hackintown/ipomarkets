@@ -59,14 +59,11 @@ export function Tooltip({
         <TooltipContent
           side={side}
           align={align}
-          className={cn(
-            "max-w-[300px] break-words shadow-md",
-            className
-          )}
+          className={cn("max-w-[300px] break-words shadow-md", className)}
         >
           {content}
         </TooltipContent>
       </TooltipPrimitive.Root>
     </TooltipProvider>
   );
-} 
+}

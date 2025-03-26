@@ -1,41 +1,70 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useEditor, EditorContent, BubbleMenu, FloatingMenu } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import Link from '@tiptap/extension-link';
-import Image from '@tiptap/extension-image';
-import TextAlign from '@tiptap/extension-text-align';
-import Placeholder from '@tiptap/extension-placeholder';
-import Table from '@tiptap/extension-table';
-import TableRow from '@tiptap/extension-table-row';
-import TableCell from '@tiptap/extension-table-cell';
-import TableHeader from '@tiptap/extension-table-header';
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import Typography from '@tiptap/extension-typography';
-import TaskList from '@tiptap/extension-task-list';
-import TaskItem from '@tiptap/extension-task-item';
-import Highlight from '@tiptap/extension-highlight';
-import Color from '@tiptap/extension-color';
-import TextStyle from '@tiptap/extension-text-style';
-import Subscript from '@tiptap/extension-subscript';
-import Superscript from '@tiptap/extension-superscript';
-import { lowlight } from 'lowlight/lib/core';
+import { useState, useEffect, useCallback } from "react";
 import {
-  Bold, Italic, Underline as UnderlineIcon, Strikethrough, Link as LinkIcon, 
-  AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, 
-  Image as ImageIcon, Table as TableIcon, Code, Highlighter, 
-  Heading1, Heading2, Heading3, Subscript as SubscriptIcon, 
-  Superscript as SuperscriptIcon, CheckSquare, Quote, Undo, Redo,
-  Type, Palette
-} from 'lucide-react';
+  useEditor,
+  EditorContent,
+  BubbleMenu,
+  FloatingMenu,
+} from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import Link from "@tiptap/extension-link";
+import Image from "@tiptap/extension-image";
+import TextAlign from "@tiptap/extension-text-align";
+import Placeholder from "@tiptap/extension-placeholder";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableCell from "@tiptap/extension-table-cell";
+import TableHeader from "@tiptap/extension-table-header";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import Typography from "@tiptap/extension-typography";
+import TaskList from "@tiptap/extension-task-list";
+import TaskItem from "@tiptap/extension-task-item";
+import Highlight from "@tiptap/extension-highlight";
+import Color from "@tiptap/extension-color";
+import TextStyle from "@tiptap/extension-text-style";
+import Subscript from "@tiptap/extension-subscript";
+import Superscript from "@tiptap/extension-superscript";
+import { common, createLowlight } from "lowlight";
+import {
+  Bold,
+  Italic,
+  Underline as UnderlineIcon,
+  Strikethrough,
+  Link as LinkIcon,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  List,
+  ListOrdered,
+  Image as ImageIcon,
+  Table as TableIcon,
+  Code,
+  Highlighter,
+  Heading1,
+  Heading2,
+  Heading3,
+  Subscript as SubscriptIcon,
+  Superscript as SuperscriptIcon,
+  CheckSquare,
+  Quote,
+  Undo,
+  Redo,
+  Type,
+  Palette,
+} from "lucide-react";
 
-import { Button } from './Button';
-import { Input } from './Input';
-import { Popover, PopoverContent, PopoverTrigger } from './Popover';
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs';  
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './Tooltip';
+import { Button } from "./Button";
+import { Input } from "./Input";
+import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./Tooltip";
 
 interface RichTextEditorProps {
   value: string;
@@ -44,15 +73,15 @@ interface RichTextEditorProps {
   editorClassName?: string;
 }
 
-const RichTextEditor = ({ 
-  value, 
-  onChange, 
-  placeholder = 'Write something...', 
-  editorClassName = '' 
+const RichTextEditor = ({
+  value,
+  onChange,
+  placeholder = "Write something...",
+  editorClassName = "",
 }: RichTextEditorProps) => {
-  const [linkUrl, setLinkUrl] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [imageAlt, setImageAlt] = useState('');
+  const [linkUrl, setLinkUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageAlt, setImageAlt] = useState("");
   const [showLinkMenu, setShowLinkMenu] = useState(false);
   const [showImageMenu, setShowImageMenu] = useState(false);
 
@@ -73,7 +102,7 @@ const RichTextEditor = ({
         inline: true,
       }),
       TextAlign.configure({
-        types: ['heading', 'paragraph'],
+        types: ["heading", "paragraph"],
       }),
       Placeholder.configure({
         placeholder,
@@ -85,7 +114,7 @@ const RichTextEditor = ({
       TableHeader,
       TableCell,
       CodeBlockLowlight.configure({
-        lowlight,
+        lowlight: createLowlight(common),
       }),
       Typography,
       TaskList,
@@ -112,39 +141,35 @@ const RichTextEditor = ({
 
   const addLink = useCallback(() => {
     if (!editor) return;
-    
+
     if (linkUrl) {
       editor
         .chain()
         .focus()
-        .extendMarkRange('link')
+        .extendMarkRange("link")
         .setLink({ href: linkUrl })
         .run();
     }
-    
-    setLinkUrl('');
+
+    setLinkUrl("");
     setShowLinkMenu(false);
   }, [editor, linkUrl]);
 
   const addImage = useCallback(() => {
     if (!editor) return;
-    
+
     if (imageUrl) {
-      editor
-        .chain()
-        .focus()
-        .setImage({ src: imageUrl, alt: imageAlt })
-        .run();
+      editor.chain().focus().setImage({ src: imageUrl, alt: imageAlt }).run();
     }
-    
-    setImageUrl('');
-    setImageAlt('');
+
+    setImageUrl("");
+    setImageAlt("");
     setShowImageMenu(false);
   }, [editor, imageUrl, imageAlt]);
 
   const insertTable = useCallback(() => {
     if (!editor) return;
-    
+
     editor
       .chain()
       .focus()
@@ -167,7 +192,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleBold().run()}
-                className={editor.isActive('bold') ? 'bg-gray-200' : ''}
+                className={editor.isActive("bold") ? "bg-gray-200" : ""}
               >
                 <Bold className="h-4 w-4" />
               </Button>
@@ -182,7 +207,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleItalic().run()}
-                className={editor.isActive('italic') ? 'bg-gray-200' : ''}
+                className={editor.isActive("italic") ? "bg-gray-200" : ""}
               >
                 <Italic className="h-4 w-4" />
               </Button>
@@ -197,7 +222,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleUnderline().run()}
-                className={editor.isActive('underline') ? 'bg-gray-200' : ''}
+                className={editor.isActive("underline") ? "bg-gray-200" : ""}
               >
                 <UnderlineIcon className="h-4 w-4" />
               </Button>
@@ -212,7 +237,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleStrike().run()}
-                className={editor.isActive('strike') ? 'bg-gray-200' : ''}
+                className={editor.isActive("strike") ? "bg-gray-200" : ""}
               >
                 <Strikethrough className="h-4 w-4" />
               </Button>
@@ -228,8 +253,12 @@ const RichTextEditor = ({
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                className={editor.isActive('heading', { level: 1 }) ? 'bg-gray-200' : ''}
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 1 }).run()
+                }
+                className={
+                  editor.isActive("heading", { level: 1 }) ? "bg-gray-200" : ""
+                }
               >
                 <Heading1 className="h-4 w-4" />
               </Button>
@@ -243,8 +272,12 @@ const RichTextEditor = ({
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                className={editor.isActive('heading', { level: 2 }) ? 'bg-gray-200' : ''}
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 2 }).run()
+                }
+                className={
+                  editor.isActive("heading", { level: 2 }) ? "bg-gray-200" : ""
+                }
               >
                 <Heading2 className="h-4 w-4" />
               </Button>
@@ -258,8 +291,12 @@ const RichTextEditor = ({
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                className={editor.isActive('heading', { level: 3 }) ? 'bg-gray-200' : ''}
+                onClick={() =>
+                  editor.chain().focus().toggleHeading({ level: 3 }).run()
+                }
+                className={
+                  editor.isActive("heading", { level: 3 }) ? "bg-gray-200" : ""
+                }
               >
                 <Heading3 className="h-4 w-4" />
               </Button>
@@ -275,8 +312,12 @@ const RichTextEditor = ({
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => editor.chain().focus().setTextAlign('left').run()}
-                className={editor.isActive({ textAlign: 'left' }) ? 'bg-gray-200' : ''}
+                onClick={() =>
+                  editor.chain().focus().setTextAlign("left").run()
+                }
+                className={
+                  editor.isActive({ textAlign: "left" }) ? "bg-gray-200" : ""
+                }
               >
                 <AlignLeft className="h-4 w-4" />
               </Button>
@@ -290,8 +331,12 @@ const RichTextEditor = ({
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => editor.chain().focus().setTextAlign('center').run()}
-                className={editor.isActive({ textAlign: 'center' }) ? 'bg-gray-200' : ''}
+                onClick={() =>
+                  editor.chain().focus().setTextAlign("center").run()
+                }
+                className={
+                  editor.isActive({ textAlign: "center" }) ? "bg-gray-200" : ""
+                }
               >
                 <AlignCenter className="h-4 w-4" />
               </Button>
@@ -305,8 +350,12 @@ const RichTextEditor = ({
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => editor.chain().focus().setTextAlign('right').run()}
-                className={editor.isActive({ textAlign: 'right' }) ? 'bg-gray-200' : ''}
+                onClick={() =>
+                  editor.chain().focus().setTextAlign("right").run()
+                }
+                className={
+                  editor.isActive({ textAlign: "right" }) ? "bg-gray-200" : ""
+                }
               >
                 <AlignRight className="h-4 w-4" />
               </Button>
@@ -320,8 +369,12 @@ const RichTextEditor = ({
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-                className={editor.isActive({ textAlign: 'justify' }) ? 'bg-gray-200' : ''}
+                onClick={() =>
+                  editor.chain().focus().setTextAlign("justify").run()
+                }
+                className={
+                  editor.isActive({ textAlign: "justify" }) ? "bg-gray-200" : ""
+                }
               >
                 <AlignJustify className="h-4 w-4" />
               </Button>
@@ -338,7 +391,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleBulletList().run()}
-                className={editor.isActive('bulletList') ? 'bg-gray-200' : ''}
+                className={editor.isActive("bulletList") ? "bg-gray-200" : ""}
               >
                 <List className="h-4 w-4" />
               </Button>
@@ -353,7 +406,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                className={editor.isActive('orderedList') ? 'bg-gray-200' : ''}
+                className={editor.isActive("orderedList") ? "bg-gray-200" : ""}
               >
                 <ListOrdered className="h-4 w-4" />
               </Button>
@@ -368,7 +421,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleTaskList().run()}
-                className={editor.isActive('taskList') ? 'bg-gray-200' : ''}
+                className={editor.isActive("taskList") ? "bg-gray-200" : ""}
               >
                 <CheckSquare className="h-4 w-4" />
               </Button>
@@ -385,7 +438,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                className={editor.isActive('blockquote') ? 'bg-gray-200' : ''}
+                className={editor.isActive("blockquote") ? "bg-gray-200" : ""}
               >
                 <Quote className="h-4 w-4" />
               </Button>
@@ -400,7 +453,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                className={editor.isActive('codeBlock') ? 'bg-gray-200' : ''}
+                className={editor.isActive("codeBlock") ? "bg-gray-200" : ""}
               >
                 <Code className="h-4 w-4" />
               </Button>
@@ -416,7 +469,7 @@ const RichTextEditor = ({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className={editor.isActive('link') ? 'bg-gray-200' : ''}
+                className={editor.isActive("link") ? "bg-gray-200" : ""}
               >
                 <LinkIcon className="h-4 w-4" />
               </Button>
@@ -439,11 +492,7 @@ const RichTextEditor = ({
                   >
                     Cancel
                   </Button>
-                  <Button
-                    type="button"
-                    size="sm"
-                    onClick={addLink}
-                  >
+                  <Button type="button" size="sm" onClick={addLink}>
                     Add Link
                   </Button>
                 </div>
@@ -453,11 +502,7 @@ const RichTextEditor = ({
 
           <Popover open={showImageMenu} onOpenChange={setShowImageMenu}>
             <PopoverTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-              >
+              <Button type="button" variant="ghost" size="sm">
                 <ImageIcon className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
@@ -485,11 +530,7 @@ const RichTextEditor = ({
                   >
                     Cancel
                   </Button>
-                  <Button
-                    type="button"
-                    size="sm"
-                    onClick={addImage}
-                  >
+                  <Button type="button" size="sm" onClick={addImage}>
                     Add Image
                   </Button>
                 </div>
@@ -515,11 +556,7 @@ const RichTextEditor = ({
 
           <Popover>
             <PopoverTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-              >
+              <Button type="button" variant="ghost" size="sm">
                 <Palette className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
@@ -527,12 +564,25 @@ const RichTextEditor = ({
               <div className="space-y-2">
                 <h3 className="font-medium">Text Color</h3>
                 <div className="grid grid-cols-5 gap-2">
-                  {['#000000', '#ef4444', '#22c55e', '#3b82f6', '#a855f7', '#ec4899', '#f97316', '#eab308', '#14b8a6', '#64748b'].map((color) => (
+                  {[
+                    "#000000",
+                    "#ef4444",
+                    "#22c55e",
+                    "#3b82f6",
+                    "#a855f7",
+                    "#ec4899",
+                    "#f97316",
+                    "#eab308",
+                    "#14b8a6",
+                    "#64748b",
+                  ].map((color) => (
                     <button
                       key={color}
                       className="w-8 h-8 rounded-full border"
                       style={{ backgroundColor: color }}
-                      onClick={() => editor.chain().focus().setColor(color).run()}
+                      onClick={() =>
+                        editor.chain().focus().setColor(color).run()
+                      }
                     />
                   ))}
                 </div>
@@ -547,7 +597,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleHighlight().run()}
-                className={editor.isActive('highlight') ? 'bg-gray-200' : ''}
+                className={editor.isActive("highlight") ? "bg-gray-200" : ""}
               >
                 <Highlighter className="h-4 w-4" />
               </Button>
@@ -562,7 +612,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleSubscript().run()}
-                className={editor.isActive('subscript') ? 'bg-gray-200' : ''}
+                className={editor.isActive("subscript") ? "bg-gray-200" : ""}
               >
                 <SubscriptIcon className="h-4 w-4" />
               </Button>
@@ -577,7 +627,7 @@ const RichTextEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => editor.chain().focus().toggleSuperscript().run()}
-                className={editor.isActive('superscript') ? 'bg-gray-200' : ''}
+                className={editor.isActive("superscript") ? "bg-gray-200" : ""}
               >
                 <SuperscriptIcon className="h-4 w-4" />
               </Button>
@@ -627,7 +677,7 @@ const RichTextEditor = ({
               variant="ghost"
               size="sm"
               onClick={() => editor.chain().focus().toggleBold().run()}
-              className={editor.isActive('bold') ? 'bg-gray-200' : ''}
+              className={editor.isActive("bold") ? "bg-gray-200" : ""}
             >
               <Bold className="h-4 w-4" />
             </Button>
@@ -636,7 +686,7 @@ const RichTextEditor = ({
               variant="ghost"
               size="sm"
               onClick={() => editor.chain().focus().toggleItalic().run()}
-              className={editor.isActive('italic') ? 'bg-gray-200' : ''}
+              className={editor.isActive("italic") ? "bg-gray-200" : ""}
             >
               <Italic className="h-4 w-4" />
             </Button>
@@ -645,7 +695,7 @@ const RichTextEditor = ({
               variant="ghost"
               size="sm"
               onClick={() => editor.chain().focus().toggleUnderline().run()}
-              className={editor.isActive('underline') ? 'bg-gray-200' : ''}
+              className={editor.isActive("underline") ? "bg-gray-200" : ""}
             >
               <UnderlineIcon className="h-4 w-4" />
             </Button>
@@ -654,7 +704,7 @@ const RichTextEditor = ({
               variant="ghost"
               size="sm"
               onClick={() => editor.chain().focus().toggleHighlight().run()}
-              className={editor.isActive('highlight') ? 'bg-gray-200' : ''}
+              className={editor.isActive("highlight") ? "bg-gray-200" : ""}
             >
               <Highlighter className="h-4 w-4" />
             </Button>
@@ -662,9 +712,9 @@ const RichTextEditor = ({
         </BubbleMenu>
       )}
 
-      <EditorContent 
-        editor={editor} 
-        className={`prose max-w-none p-4 focus:outline-none ${editorClassName}`} 
+      <EditorContent
+        editor={editor}
+        className={`prose max-w-none p-4 focus:outline-none ${editorClassName}`}
       />
     </div>
   );

@@ -138,12 +138,12 @@ export default function AdminCompanyPage() {
   );
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-10 shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center">
-              <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-xl md:text-2xl font-bold text-foreground">
                 {companyDetails.companyName}
               </h1>
               <Badge
@@ -176,20 +176,20 @@ export default function AdminCompanyPage() {
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <Link
-              href="/admin/dashboard"
+              href="/"
               className="hover:text-primary dark:hover:text-primary"
             >
-              Admin Dashboard
+              Home
             </Link>
             <ChevronRight className="h-4 w-4 mx-1" />
             <Link
-              href="/admin/dashboard/preview-tables"
+              href="#"
               className="hover:text-primary dark:hover:text-primary"
             >
               Companies
             </Link>
             <ChevronRight className="h-4 w-4 mx-1" />
-            <span className="text-gray-900 dark:text-white font-medium">
+            <span className="text-foreground font-medium">
               {companyDetails?.companyName || "Company Details"}
             </span>
           </div>
@@ -310,9 +310,10 @@ export default function AdminCompanyPage() {
 
                 <Card className="p-4">
                   {companyDetails.basicInfo.description && (
-                    <div className="whitespace-pre-line text-foreground text-sm md:text-base">
-                      {companyDetails.basicInfo.description}
-                    </div>
+                    <div
+                      className="prose prose-sm md:prose max-w-none text-foreground"
+                      dangerouslySetInnerHTML={{ __html: companyDetails.basicInfo.description }}
+                    />
                   )}
                 </Card>
 

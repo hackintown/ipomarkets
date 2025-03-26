@@ -25,26 +25,26 @@ export default function BlogSection({ posts }: AllBlogPostsProps) {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="space-y-6 lg:space-y-12 lg:mt-16 py-12 bg-primary/5"
+      className="space-y-6 lg:space-y-12 lg:mt-16 py-10 bg-card"
     >
       <div className="text-center mb-16">
         <h2 className="text-3xl font-bold text-center tracking-tight sm:text-4xl lg:text-5xl mb-4">
           Our Blog&nbsp;
-          <span className="text-primary mt-2">Insights & Updates</span>
+          <span className="text-primary mt-2">Insights</span>
         </h2>
-        <p className="mt-2 max-w-3xl mx-auto text-base font-thin lg:text-lg text-foreground/80 text-center mb-8">
+        <p className="mt-2 max-w-3xl mx-auto text-base font-light lg:text-lg text-muted-foreground text-center mb-8">
           Discover industry insights, technical deep-dives, and expert
           perspectives from our team.
         </p>
       </div>
 
       {posts.length === 0 ? (
-        <p className="text-center text-gray-500">
+        <p className="text-center text-muted-foreground">
           No posts available at the moment.
         </p>
       ) : (
         <div className="container px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
             {posts.slice(0, 3).map((post, index) => (
               <motion.div
                 key={post._id}

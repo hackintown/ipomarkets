@@ -39,6 +39,7 @@ import {
   SelectValue,
 } from "@/components/ui/Select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
 
 // Types from PreviewTables
 interface TableType {
@@ -67,6 +68,12 @@ interface TableSettings {
 
 type TableRowType = Record<string, string | number | boolean>;
 
+// Add this interface for company details
+interface CompanyDetail {
+  companyId: string;
+  _id: string;
+}
+
 export default function IPOListing() {
   // State management
   const [tables, setTables] = useState<TableType[]>([]);
@@ -85,6 +92,7 @@ export default function IPOListing() {
   >({});
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>("");
+  const [companyDetailsMap, setCompanyDetailsMap] = useState<Record<string, string>>({});
 
   const fetchTables = useCallback(async () => {
     setLoading(true);
@@ -156,9 +164,29 @@ export default function IPOListing() {
     }
   }, []);
 
+  // Add this function to fetch company details mapping
+  const fetchCompanyDetailsMapping = useCallback(async () => {
+    try {
+      const response = await fetch('/api/company-details');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          const mapping: Record<string, string> = {};
+          data.companyDetails.forEach((detail: CompanyDetail) => {
+            mapping[detail.companyId] = detail._id;
+          });
+          setCompanyDetailsMap(mapping);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching company details mapping:", error);
+    }
+  }, []);
+
   useEffect(() => {
     fetchTables();
-  }, [fetchTables]);
+    fetchCompanyDetailsMapping();
+  }, [fetchTables, fetchCompanyDetailsMapping]);
 
   const fetchTableData = async (tableId: string) => {
     try {
@@ -481,6 +509,30 @@ function TableDisplay({
   onExport,
 }: TableDisplayProps) {
   const activeFiltersCount = Object.values(tableFilters).filter(Boolean).length;
+  const [companyDetailsMap, setCompanyDetailsMap] = useState<Record<string, string>>({});
+
+  // Fetch company details mapping when component mounts
+  useEffect(() => {
+    const fetchCompanyDetailsMapping = async () => {
+      try {
+        const response = await fetch('/api/company-details');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            const mapping: Record<string, string> = {};
+            data.companyDetails.forEach((detail: CompanyDetail) => {
+              mapping[detail.companyId] = detail._id;
+            });
+            setCompanyDetailsMap(mapping);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching company details mapping:", error);
+      }
+    };
+
+    fetchCompanyDetailsMapping();
+  }, []);
 
   return (
     <Card className="overflow-hidden">
@@ -667,11 +719,27 @@ function TableDisplay({
               {data.length > 0 ? (
                 data.map((row, rowIdx) => (
                   <TableRow key={rowIdx} className="hover:bg-muted/30">
-                    {table.columns.map((column) => (
-                      <TableCell key={column.name} className="py-3">
-                        {formatCellValue(row[column.name], column.type)}
-                      </TableCell>
-                    ))}
+                    {table.columns.map((column, colIndex) => {
+                      // Check if this is the first column (usually company name) and if it has company details
+                      const isCompanyNameColumn = colIndex === 0;
+                      const rowId = String(row._id); // Convert to string to use as index
+                      const hasCompanyDetails = isCompanyNameColumn && rowId in companyDetailsMap;
+
+                      return (
+                        <TableCell key={column.name} className="py-3">
+                          {isCompanyNameColumn && hasCompanyDetails ? (
+                            <Link
+                              href={`/company-details/${companyDetailsMap[rowId]}`}
+                              className="text-primary hover:underline font-medium"
+                            >
+                              {formatCellValue(row[column.name], column.type)}
+                            </Link>
+                          ) : (
+                            formatCellValue(row[column.name], column.type)
+                          )}
+                        </TableCell>
+                      );
+                    })}
                   </TableRow>
                 ))
               ) : (

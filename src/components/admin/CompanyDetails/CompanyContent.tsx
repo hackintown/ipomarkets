@@ -160,6 +160,7 @@ export default function CompanyContent({ data, onChange }: ContentProps) {
                     value={content.body}
                     onChange={(value) => updateContent(index, "body", value)}
                     placeholder="Enter rich text content here..."
+                    editorClassName="min-h-[300px]"
                   />
                 </div>
               </div>

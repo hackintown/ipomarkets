@@ -29,12 +29,12 @@ export default function FAQ() {
     }
 
     return (
-        <section className="py-20 px-4 sm:px-6 lg:px-8 text-white">
+        <section className="py-10 px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center tracking-tight text-foreground sm:text-4xl lg:text-5xl mb-4 lg:mb-6">
                 Frequently Asked&nbsp;
                 <span className="text-primary mt-2">Questions</span>
             </h2>
-            <p className="mt-2 max-w-3xl mx-auto text-base font-thin lg:text-lg text-foreground text-center mb-8">
+            <p className="mt-2 max-w-3xl mx-auto text-base font-light lg:text-lg text-muted-foreground text-center mb-8">
                 We are a company with a DNA of entrepreneurship, and hence, we value
                 the time and money invested by our clients.
             </p>
@@ -42,7 +42,7 @@ export default function FAQ() {
                 {faqs.map((faq, index) => (
                     <div key={index} className="mb-4">
                         <button
-                            className="flex justify-between items-center w-full text-left p-4 bg-primary focus:rounded-b-none rounded-lg focus:outline-none"
+                            className="flex justify-between items-center w-full text-left border border-border p-4 bg-card focus:rounded-b-none rounded-lg focus:outline-none"
                             onClick={() => toggleFAQ(index)}
                             aria-expanded={activeIndex === index}
                             aria-controls={`faq-answer-${index}`}
@@ -60,11 +60,11 @@ export default function FAQ() {
                                     animate={{ opacity: 1, height: 'auto' }}
                                     exit={{ opacity: 0, height: 0 }}
                                     transition={{ duration: 0.3 }}
-                                >
-                                    <div className="p-4 bg-primary rounded-b-lg">
-                                        <p>{faq.answer}</p>
+                                >   
+                                    <div className="p-4 bg-background rounded-b-lg shadow-sm">
+                                        <p className="text-foreground">{faq.answer}</p>
                                     </div>
-                                </motion.div>
+                                </motion.div>   
                             )}
                         </AnimatePresence>
                     </div>

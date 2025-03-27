@@ -5,7 +5,6 @@ import {
   useEditor,
   EditorContent,
   BubbleMenu,
-  FloatingMenu,
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -52,7 +51,6 @@ import {
   Quote,
   Undo,
   Redo,
-  Type,
   Palette,
 } from "lucide-react";
 

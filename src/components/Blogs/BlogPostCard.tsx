@@ -8,15 +8,7 @@ import Link from "next/link";
 import { Button } from "../ui/Button";
 import { truncate } from "@/lib/blog/utils";
 import { IoArrowForwardCircleOutline } from "react-icons/io5";
-
-interface BlogPost {
-  _id: string;
-  title: string;
-  content: string;
-  image: string;
-  tags: string[];
-  createdAt: string;
-}
+import { BlogPost } from "@/lib/blog/type";
 
 export default function BlogPostCard({
   post,

@@ -399,6 +399,7 @@ export default function IPOListing() {
                 currentPage={currentPages[table._id] || 1}
                 sortConfig={sortConfigs[table._id]}
                 tableFilters={filters[table._id] || {}}
+                companyDetailsMap={companyDetailsMap}
                 onSearch={(value) =>
                   setSearchQueries((prev) => ({ ...prev, [table._id]: value }))
                 }
@@ -443,6 +444,7 @@ export default function IPOListing() {
             currentPage={currentPages[table._id] || 1}
             sortConfig={sortConfigs[table._id]}
             tableFilters={filters[table._id] || {}}
+            companyDetailsMap={companyDetailsMap}
             onSearch={(value) =>
               setSearchQueries((prev) => ({ ...prev, [table._id]: value }))
             }
@@ -485,6 +487,7 @@ interface TableDisplayProps {
   currentPage: number;
   sortConfig: { key: string; direction: "asc" | "desc" } | null;
   tableFilters: Record<string, string>;
+  companyDetailsMap: Record<string, string>;
   onSearch: (value: string) => void;
   onSort: (key: string) => void;
   onFilter: (key: string, value: string) => void;
@@ -501,6 +504,7 @@ function TableDisplay({
   currentPage,
   sortConfig,
   tableFilters,
+  companyDetailsMap,
   onSearch,
   onSort,
   onFilter,
@@ -509,30 +513,6 @@ function TableDisplay({
   onExport,
 }: TableDisplayProps) {
   const activeFiltersCount = Object.values(tableFilters).filter(Boolean).length;
-  const [companyDetailsMap, setCompanyDetailsMap] = useState<Record<string, string>>({});
-
-  // Fetch company details mapping when component mounts
-  useEffect(() => {
-    const fetchCompanyDetailsMapping = async () => {
-      try {
-        const response = await fetch('/api/company-details');
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success) {
-            const mapping: Record<string, string> = {};
-            data.companyDetails.forEach((detail: CompanyDetail) => {
-              mapping[detail.companyId] = detail._id;
-            });
-            setCompanyDetailsMap(mapping);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching company details mapping:", error);
-      }
-    };
-
-    fetchCompanyDetailsMapping();
-  }, []);
 
   return (
     <Card className="overflow-hidden">

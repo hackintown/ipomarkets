@@ -2,15 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import BlogPostCard from "./BlogPostCard";
-
-interface BlogPost {
-  _id: string;
-  title: string;
-  content: string;
-  image: string;
-  tags: string[];
-  createdAt: string;
-}
+import { BlogPost } from "@/lib/blog/type";
 
 interface PopularBlogsProps {
   posts: BlogPost[];

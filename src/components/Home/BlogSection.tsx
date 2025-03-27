@@ -5,15 +5,7 @@ import BlogPostCard from "@/components/Blogs/BlogPostCard";
 import { Button } from "@/components/ui/Button";
 import { IoArrowForwardCircleOutline } from "react-icons/io5";
 import Link from "next/link";
-
-interface BlogPost {
-  _id: string;
-  title: string;
-  content: string;
-  image: string;
-  tags: string[];
-  createdAt: string;
-}
+import { BlogPost } from "@/lib/blog/type";
 
 interface AllBlogPostsProps {
   posts: BlogPost[];

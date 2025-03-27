@@ -39,16 +39,7 @@ import {
   Highlighter,
 } from "lucide-react";
 import toast from "react-hot-toast";
-
-// Define BlogPost interface
-interface BlogPost {
-  _id: string;
-  title: string;
-  content: string;
-  image?: string;
-  tags: string[];
-  createdAt?: string;
-}
+import { BlogPost } from "@/lib/blog/type";
 
 interface CreateBlogPostProps {
   onPostCreatedAction?: (post: BlogPost) => Promise<void>;

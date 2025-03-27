@@ -6,15 +6,7 @@ import PopularBlogPosts from "./PopularBlogs";
 import AllBlogs from "./AllBlogs";
 import BlogHeader from "./BlogHeader";
 // import { useDebounce } from "@/hooks/useDebounce";
-
-interface BlogPost {
-  _id: string;
-  title: string;
-  content: string;
-  image: string;
-  tags: string[];
-  createdAt: string;
-}
+import { BlogPost } from "@/lib/blog/type";
 
 interface BlogClientProps {
   initialBlogPosts: BlogPost[];

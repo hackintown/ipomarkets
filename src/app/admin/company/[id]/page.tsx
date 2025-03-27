@@ -331,7 +331,7 @@ export default function AdminCompanyPage() {
                                     key={rowIndex}
                                     className="hover:bg-gray-50 transition-colors duration-150"
                                   >
-                                    {Object.entries(row).map(([key, value], cellIndex) => (
+                                    {Object.entries(row).map(([, value], cellIndex) => (
                                       <td
                                         key={cellIndex}
                                         className={`py-4 px-6 whitespace-nowrap ${cellIndex === 0
@@ -637,7 +637,7 @@ export default function AdminCompanyPage() {
                           key={index}
                           variant="outline"
                           className="w-full justify-start"
-                          asChild
+                    
                         >
                           <Link href={link.url} target="_blank" rel="noopener noreferrer">
                             <FileText className="h-4 w-4 mr-2" />

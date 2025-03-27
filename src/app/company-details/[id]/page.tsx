@@ -332,7 +332,7 @@ export default function AdminCompanyPage() {
                                     key={rowIndex}
                                     className="hover:bg-gray-50 transition-colors duration-150"
                                   >
-                                    {Object.entries(row).map(([key, value], cellIndex) => (
+                                    {Object.entries(row).map(([, value], cellIndex) => (
                                       <td
                                         key={cellIndex}
                                         className={`py-4 px-6 whitespace-nowrap ${cellIndex === 0
@@ -365,9 +365,11 @@ export default function AdminCompanyPage() {
                           <h3 className="text-xl font-medium text-foreground border-b border-gray-200 pb-2">
                             {section.title}
                           </h3>
-                          <div className="text-foreground leading-relaxed whitespace-pre-line bg-background shadow-sm p-4 rounded-lg">
-                            {section.body}
-                          </div>
+
+                          <div
+                            className="prose prose-sm md:prose max-w-none text-foreground prose-a:text-orange-600 hover:prose-a:text-red-500"
+                            dangerouslySetInnerHTML={{ __html: section.body }}
+                          />
                         </div>
                       ))}
                     </div>
@@ -519,7 +521,10 @@ export default function AdminCompanyPage() {
                       </div>
                     </CardHeader>
                     <CardContent className="pt-6">
-                      {review.content && <p className="mb-4 whitespace-pre-line">{review.content}</p>}
+                      <div
+                        className="prose prose-sm md:prose max-w-none text-foreground"
+                        dangerouslySetInnerHTML={{ __html: review.content }}
+                      />
 
                       {review.type === "list" && review.listItems && review.listItems.length > 0 && (
                         <ul className="list-disc pl-5 space-y-2">
@@ -597,9 +602,10 @@ export default function AdminCompanyPage() {
                     </CardHeader>
                     <CardContent>
                       <p className="font-medium text-foreground mb-4">{newsItem.description}</p>
-                      <div className="text-muted-foreground whitespace-pre-line">
-                        {newsItem.content}
-                      </div>
+                      <div
+                        className="prose prose-sm md:prose max-w-none text-foreground"
+                        dangerouslySetInnerHTML={{ __html: newsItem.content }}
+                      />
                     </CardContent>
                     <CardFooter className="bg-muted/30 flex justify-end">
                       <Button variant="outline" size="sm" leftIcon={<ExternalLink className="size-5" />}>
@@ -638,7 +644,6 @@ export default function AdminCompanyPage() {
                           key={index}
                           variant="outline"
                           className="w-full justify-start"
-                          asChild
                         >
                           <Link href={link.url} target="_blank" rel="noopener noreferrer">
                             <FileText className="h-4 w-4 mr-2" />

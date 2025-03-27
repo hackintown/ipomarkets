@@ -7,7 +7,7 @@ import Image from "next/image";
 import { IHeroSlide } from "@/components/Home/Hero/HeroSlides";
 import { toast } from "react-hot-toast";
 import Loader from "@/components/ui/Loader";
-import HeroSlideModal from "@/components/Admin/HeroSlideModal";
+import HeroSlideModal from "../../../../components/Admin/HeroSlideModal";
 
 // Extended type for slide with MongoDB ID
 type HeroSlideWithId = IHeroSlide & { _id: string };

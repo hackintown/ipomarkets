@@ -1,4 +1,4 @@
-import CompanyDetails from "@/components/Admin/CompanyDetails/CompanyDetails";
+import CompanyDetails from "@/components/admin/CompanyDetails/CompanyDetails";
 
 export default function CompanyDetailsPage() {
   return (

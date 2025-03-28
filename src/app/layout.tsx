@@ -1,7 +1,7 @@
 import { Inter, Jost, Poppins } from "next/font/google";
 import "./globals.css";
 import { Metadata } from "next";
-import MainLayoutWrapper from "@/components/Admin/MainLayoutWrapper";
+import MainLayoutWrapper from "@/components/admin/MainLayoutWrapper";
 
 const inter = Inter({
   variable: "--font-inter",
